@@ -1,0 +1,41 @@
+
+S.J. Riesenfeld
+MetaPASSAGE README
+Last updated: Nov 2010
+
+This README contains information about MetaPASSAGE (a Metagenomic
+Pipeline for Automated Simulations and Analysis of Gene Families). It
+is still currently under construction. Much more information, along
+with example scripts showing how to use the pipeline will be included
+soon.
+
+The script MetaPASSAGE.pl assumes that the Perl can find the modules
+in the simPipeModules directory. The easiest way to ensure this is to add
+a line like
+
+export PERL5LIB=$PERL5LIB:/home/sriesenfeld/projects/MetaPASSAGE/simPipeModules
+
+to your .bashrc file.
+
+------
+
+The following must be installed for full functionality of the
+pipeline. Modular functionality will be discussed below.
+
+A recent version of Perl (5.10 would be ideal)
+NCBI-BLAST (blastx, blastp, formatdb)
+HMMER (hmmalign) (You need HMMER 2 for use with AMPHORA)
+EMBOSS (transeq)
+MetaSim
+AMPHORA
+BioPerl (for use with AMPHORA only)
+
+Variables that you may want to customize are in SimPipeVars.pm.
+
+-----
+
+To get help with the options, run this at the command line:
+
+perl MetaPASSAGE.pl -h
+
+-----
