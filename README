@@ -1,41 +1,334 @@
-
 S.J. Riesenfeld
 MetaPASSAGE README
 Last updated: Nov 2010
 
-This README contains information about MetaPASSAGE (a Metagenomic
-Pipeline for Automated Simulations and Analysis of Gene Families). It
-is still currently under construction. Much more information, along
-with example scripts showing how to use the pipeline will be included
-soon.
 
-The script MetaPASSAGE.pl assumes that the Perl can find the modules
-in the simPipeModules directory. The easiest way to ensure this is to add
-a line like
+==MetaPASSAGE README==
+
+This README contains information about MetaPASSAGE (a Metagenomic
+Pipeline for Automated Simulations and Analysis of Gene Families).
+
+This software is under development and subject to change. Updates are
+posted at github:  https://github.com/sriesenfeld/MetaPASSAGE
+
+The source code contains additional documentation. For an explanation
+of all options, see the source code file MetaPASSAGE.pl or run the
+command
+
+> perl MetaPASSAGE.pl --help 
+
+once the software is installed.
+
+The MetaPASSAGE manuscript is currently in submission. The
+Supplementary Information for the manuscript contains a guide to the
+example scripts.
+
+Please address any inquiries to the author Samantha J. Riesenfeld:  
+samantha.riesenfeld@gladstone.ucsf.edu
+
+
+==About MetaPASSAGE==
+
+MetaPassage is a fully automated analysis workflow for generating
+simulated metagenomic libraries and producing reliable alignments of
+sequencing reads belonging to individual gene families, including
+SSU-rRNA and AMPHORA proteins (Wu & Eisen 2008).  Our workflow
+integrates the simulation program MetaSim (Richter et al. 2008) with
+packages for data processing and alignment via flexible Perl scripts
+and modules, enabling batch processing and bulk statistical analysis.
+
+Typical inputs include: a fasta file U of peptide or DNA gene
+sequences; a number n of sequences to sample from U; a profile model M
+from HMMER or INFERNAL for the gene family, which is used to align the
+simulated reads.
+
+Briefly (skipping many additional options), the workflow consists of
+the following steps:
+
+0. (Optional preliminary step) Create a ``reference database'' D that
+is a subset of U, which captures the simulated prior knowledge of the
+gene family (the default is U).
+
+1. Sample n sequences uniformly at random without replacement from
+input sequences U to form the distinct sequences in a population P.
+
+2. Generate information about the relative abundances (uniform or
+skewed) of these sequences in P, and feed P to MetaSim.
+
+3. Metasim outputs a set S of simulated metagenomic reads, according
+to a sequencing model (e.g., Sanger or Illumina).
+
+4. Use a BLAST database formatted from D to create R, a set of
+reads either translated in the correct frame or correctly oriented,
+depending on whether U contains peptides or DNA sequences.
+
+5. The reads in R are aligned to the model M, along with D if it is
+specified, and the resulting alignment is output. 
+
+Additional features influence aspects of the reads and alignment.
+
+
+==STRUCTURE==
+
+The MetaPASSAGE directory contains this README and the main scripts:
+
+  createRefDB.pl 
+  MetaPASSAGE.pl
+
+as well as an alternate MetaSim Empirical error model:
+
+  errormodel-80bp.mconf
+
+and six directories:
+
+  simPipeModules
+  util_scripts
+  example1_AMPHORA_rpoB
+  example1_sample_output
+  example2_16SrRNA
+  example2_sample_output
+
+The simPipeModules directory contains Perl modules that are part of
+MetaPASSAGE and necessary for it to run.
+
+The util_scripts directory contains a couple of scripts that may be
+useful in working with MetaPASSAGE.
+
+The directory example1_AMPHORA_rpoB contains example scripts for using
+MetaPASSAGE with AMPHORA. The directory example1_sample_output
+contains a sample of the output files written by these scripts.
+
+The directory example2_16SrRNA contains example scripts for using
+MetaPASSAGE with a set of 16S rRNA sequences. The directory
+example2_sample_output contains a sample of the output files written
+by these scripts.
+
+
+==REQUIREMENTS==
+
+MetaPASSAGE was written in Perl 5 for use with Unix or
+Linux. MetaPASSAGE incorporates several software packages written by
+other authors. It can be modified to accomodate other packages with
+similar functionality, but as it is, the following software must be
+installed for full functionality of MetaPASSAGE:
+
+Perl 5 (Development was done using Perl 5.10)
+  http://www.perl.org/
+  http://dev.perl.org/perl5/
+MetaSim 
+  http://www-ab.informatik.uni-tuebingen.de/software/metasim/
+NCBI BLAST (legacy version, blastall with blastx, blastp, formatdb) 
+  ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/
+HMMER (hmmalign) 
+  http://hmmer.janelia.org/
+  You need HMMER 2 for use with AMPHORA:
+  http://hmmer.janelia.org/release-archive.html
+INFERNAL (cmalign) 
+  http://infernal.janelia.org/
+EMBOSS (transeq)
+  http://emboss.sourceforge.net/download/#Stable/
+AMPHORA
+  http://bobcat.genomecenter.ucdavis.edu/AMPHORA/
+BioPerl (for use with AMPHORA or sequence retreival only)
+  http://www.bioperl.org/wiki/Getting_BioPerl
+
+
+There are many options for MetaPASSAGE.pl that can be used to
+customize the functionality. Alternatively, variables that you may
+want to customize are in SimPipeVars.pm.
+
+The script MetaPASSAGE.pl assumes that Perl can find the modules in
+the simPipeModules directory. The easiest way to ensure this is to add
+a line like:
 
 export PERL5LIB=$PERL5LIB:/home/sriesenfeld/projects/MetaPASSAGE/simPipeModules
 
 to your .bashrc file.
 
-------
+Dependencies include the following Perl packages:
 
-The following must be installed for full functionality of the
-pipeline. Modular functionality will be discussed below.
+File::Spec
+File::Copy
+File::Temp
+Getopt::Std
+Getopt::Long
+List::Util
 
-A recent version of Perl (5.10 would be ideal)
-NCBI-BLAST (blastx, blastp, formatdb)
-HMMER (hmmalign) (You need HMMER 2 for use with AMPHORA)
-EMBOSS (transeq)
-MetaSim
-AMPHORA
-BioPerl (for use with AMPHORA only)
+In addition, to use the retrieval mechanism for AMPHORA sequences
+built into createRefDB.pl, you need these BioPerl packages:
 
-Variables that you may want to customize are in SimPipeVars.pm.
+(FIX: What to do if you do not want to install them)
 
------
+Bio::DB
+Bio::Factory
+Bio::SeqFeature
 
-To get help with the options, run this at the command line:
+In order to use work with AMPHORA, you also need these BioPerl
+packages (and whatever else AMPHORA requires):
 
-perl MetaPASSAGE.pl -h
+(FIX: What to do if you do not want to work with AMPHORA)
 
------
+Bio::SeqIO
+Bio::SearchIO
+
+
+==OUTPUT FILES==
+
+MetaPASSAGE can be run in a modular way, starting and stopping at
+different stages. The naming scheme of the output files is designed to
+show what steps were taken to produce each file.  
+
+The string <basename> in the labels below can be set by the user with
+option '--out_basename'; the default for MetaPASSAGE is to set
+<basename> to 'sim'.
+
+A full run of MetaPASSAGE produces the files listed below by default:
+
+----------------
+Output files, given an input file of protein sequences for a gene
+family (not using AMPHORA), along with corresponding DNA sequences and
+a HMM profile:
+
+1. <basename>-src.pep : The distinct full-length protein sequences
+   in the simulated population.
+2. <basename>-src.fna : The distinct full-length DNA sequences in the
+   simulated population (corresponding to #1).
+3. <basename>-src-pd.fna : Same DNA sequences as #2, with padding of
+   'N's on each end of each sequence.
+4. <basename>-src-pd.mprf : Taxonomic profile for MetaSim giving the
+   relative abundances of the sequences in the simulated population.
+5. <basename>-src-pd-reads.fna : Reads generated by MetaSim, given #3
+   and #4, and sequencing model.
+6. <basename>-metasim.log : Log containing the commands issued to
+   MetaSim, the ``values'' MetaSim returns (which are usually
+   strings), and a copy of the ``error.log'' file written in the
+   MetaSim installation directory for this run.
+7. <basename>-src-pd-reads-rp.fna : Reads in #5, with padding
+   removed. Malformed reads are excluded.
+8. <basename>-src-pd-reads-rp-thr.fna : Reads in #7, excluding reads
+   shorter than a given threshold.
+9. <basename>-src-pd-reads-rp-thr.frames : Information gleaned from
+   BLASTX output: for each read, the distinct frames of translation
+   over all hits and the best expect values for the frames.
+10. <basename>-src-pd-reads-rp-thr.pep : Reads in #8, translated into
+    peptides. Reads without any good hits are excluded.
+11. <basename>-src-pd-reads-rp-thr-<X>r.pep : Subset of reads in
+    #10. If <X> is a number, then it is the number of reads
+    subsampled randomly. If <X> is an 's', then there is at most one
+    read for each full-length sequence in #1.
+12. <basename>-src-final<Y>.pep : Subset of distinct, full-length
+    sequences in #1 that correspond to the final set of reads in
+    #11. <Y> is the number of these sequences (which may be much
+    smaller than the number of reads in #11, especially if #4 is a
+    skewed distribution).
+14. <basename>-src-pd-reads-rp-thr-<X>r-align.log : A log of terminal
+    output generated by the process of aligning reads (particularly
+    relevant for use with AMPHORA).
+13. <basename>-src-pd-reads-rp-thr-<X>r-RefDB.sto : A stockholm
+    alignment of the reads in #11, as well as the reference database,
+    if it is specified.  ('-RefDB' is not included in file name if no
+    reference database is specified.)
+
+Options can create additional files:
+
+(option:  --save_blast_out)
+15. <basename>-src-pd-reads-rp-thr.blx : the output of BLASTX, which
+    is deleted unless option --save_blast_output is used
+
+(option:  --align_source)
+16. <basename>-src-final<Y>-align.log : A log of terminal output
+    generated by the process of aligning full-length sequences
+17. <basename>-src-final<Y>-RefDB.sto : A stockholm alignment of the
+    full-length sequences in #12, as well as the reference database,
+    if it is specified. ('-RefDB' is not included in the file name if
+    no reference database is specified.)
+
+(option: --log) 
+18. <basename>.log : A log containing the output that would normally
+    be written to the terminal; tracking the flow of MetaPASSAGE
+
+----------------
+Output files, given the specification of an AMPHORA gene family named
+<gene>:
+
+Files #1-10 are the same as above.
+
+11. <basename>-src-pd-reads-rp-thr-<gene>.pep : Subset of reads in #10
+    that have been scanned by hmmpfam and are good matches for the
+    AMPHORA HMM profile for <gene>
+12. <basename>-src-pd-reads-rp-thr-<gene>-<X>r.pep : Subset of reads in
+    #11. If <X> is a number, then it is the number of reads
+    subsampled randomly. If <X> is an 's', then there is at most one
+    read for each full-length sequence in #1.
+13. <basename>-src-final<Y>.pep : Subset of distinct, full-length
+    sequences in #1 that correspond to the final set of reads in
+    #12. <Y> is the number of these sequences (which may be much
+    smaller than the number of reads in #11, especially if #4 is a
+    skewed distribution).
+14. <basename>-src-pd-reads-rp-thr-<X>r-align.log : A log of terminal
+    output generated by the process of aligning reads (particularly
+    relevant for use with AMPHORA).
+15. <basename>-src-pd-reads-rp-thr-<X>r-RefDB.aln : A fasta alignment
+    of the reads in #12, as well as the reference database, if it is
+    specified.  ('-RefDB' is not included in file name if no reference
+    database is specified.)
+
+Options can create additional files:
+
+(if option:  --align_source)
+16. <basename>-src-final<Y>-align.log : A log of terminal output
+    generated by the process of aligning full-length sequences
+17. <basename>-src-final<Y>-RefDB.aln : A fasta alignment of the
+    full-length sequences in #13, as well as the reference database,
+    if it is specified. ('-RefDB' is not included in the file name if
+    no reference database is specified.)
+
+(options --save_blast_out and --log create the same additional files
+ as describd above)
+
+----------------
+Output files, given an input file of RNA sequences for a gene
+family, converted to DNA sequences, and an INFERNAL CM model:
+
+Files #1-7 are the same as #2-8 above. 
+
+8. <basename>-src-pd-reads-rp-thr.orient : Information gleaned from
+   BLASTN output: for each read, the distinct strands over all hits
+   and the best expect values for those strands.
+9. <basename>-src-pd-reads-rp-thr-or.fna : Reads in #8, with those
+   reads determined by the BLAST step to be on the opposing strand
+   reverse-complemented.
+10. <basename>-src-pd-reads-rp-thr-or-<X>r.fna : Subset of reads in
+    #9. If <X> is a number, then it is the number of reads
+    subsampled randomly. If <X> is an 's', then there is at most one
+    read for each full-length sequence in #1.
+11. <basename>-src-final<Y>.fna : Subset of distinct, full-length
+    sequences in #1 that correspond to the final set of reads in
+    #11. <Y> is the number of these sequences (which may be much
+    smaller than the number of reads in #10, especially if #3 is a
+    skewed distribution).
+12. <basename>-src-pd-reads-rp-thr-or-<X>r-align.log : A log of
+    terminal output generated by the process of aligning reads
+    (particularly relevant for use with AMPHORA).
+13. <basename>-src-pd-reads-rp-thr-or-<X>r-RefDB.sto : A stockholm
+    alignment of the reads in #10, as well as the reference database,
+    if it is specified.  ('-RefDB' is not included in file name if no
+    reference database is specified.)
+
+Options can create additional files:
+
+(option:  --save_blast_out)
+14. <basename>-src-pd-reads-rp-thr.bln : the output of BLASTN, which
+    is deleted unless option --save_blast_output is used
+
+(option:  --align_source)
+15. <basename>-src-final<Y>-align.log : A log of terminal output
+    generated by the process of aligning full-length sequences
+16. <basename>-src-final<Y>-RefDB.sto : A stockholm alignment of the
+    full-length sequences in #11, as well as the reference database,
+    if it is specified. ('-RefDB' is not included in the file name if
+    no reference database is specified.)
+
+(option --log creates the same additional file as described above)
+
+
