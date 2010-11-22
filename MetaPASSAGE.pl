@@ -101,10 +101,10 @@ Options:
         e.g. 'DNA', could be added)>
 
     -g, --gene 
-       <gene, family symbol, e.g., 'rpoB' or '16S', especially for use
-        with AMPHORA; also, the gene symbol is used in the default
-        file names for certain files; if not set and option '-y' is
-        used then that filename is used instead of the gene symbol>
+       <gene, family symbol, e.g., 'rpoB', specfying which protein
+        family of AMPHORA is to be used; assumes a standard
+        installation of AMPHORA; if not set and option '-y' is used
+        then that filename is used instead of the gene symbol>
 
     --amphora_path 
        <the path to the AMPHORA directory; must be set if '--gene'
@@ -112,15 +112,18 @@ Options:
         '/usr/local/AMPHORA/'>
 
     -y, --seqs_file_basename 
-       <optional base name (without extensions, but it should include
-        the path) of fasta sequence files to use instead of AMPHORA
-        Reference Sequences; there may be one file (DNA only) or two
-        (DNA and amino acid) sequence files with the same basename: if
-        sequences are DNA, filename extension assumed to be '.fna'; if
-        sequences are peptides, filename extension assumed to be
-        '.pep'; (set by $dna_fasta_ext and $pep_fasta_ext in
-        simPipeVars.pm)> -c, --out_basename <optional base name
-        (without extensions) for most output files (except log file)>
+       <optional base name (without the extension, but it should
+        include the path) of fasta sequence files to use instead of
+        AMPHORA Reference Sequences; there may be one file (DNA only)
+        or two (DNA and amino acid) sequence files with the same
+        basename: if sequences are DNA, filename extension assumed to
+        be '.fna'; if sequences are peptides, filename extension
+        assumed to be '.pep'; (set by $dna_fasta_ext and
+        $pep_fasta_ext in simPipeVars.pm)>
+
+     -c, --out_basename 
+       <optional base name (without extensions) used in the naming
+        scheme for most output files>
 
     -o, --out_dir 
        <optional name of output directory; excluding the blast
@@ -139,26 +142,31 @@ Options:
         also with option '-m' and '-d'>
 
     -n, --num_seqs 
-       <total number of sequences to be sampled from the whole AMPHORA
-        database (except Candidatus and Mycoplasma sequences) for the
-        specified gene and write into a fasta file; if option '-s' is
-        set, the current MetaSim database is deleted and these
-        sequences are automatically added to the MetaSim database; by
-        default (if option '-t' is not set), a uniform MetaSim
-        taxonomic profile for these sequences is generated>
+       <total number of distinct sequences to be sampled for the
+        simulated population from the whole set of full-length
+        sequences (except Candidatus and Mycoplasma sequences), which
+        is specified by option '-g' or '-y'; see option '-m', which
+        affects the extent to which these sequences are sampled from
+        the reference database; the sampled sequences are written to a
+        fasta file; if option '-s' is set, the current MetaSim
+        database is deleted and these sequences are automatically
+        added to the MetaSim database; by default (if neither option
+        '-t' nor option '--taxon_profile_ratio' is set), a uniform
+        MetaSim taxonomic profile (with extension '.mprf') for these
+        sequences is generated>
 
-    -m, --num_ref_seqs 
-       <number of sequences in the sample specified by option '-n'
+    -m, --num_ref_seqs
+        <number of sequences among the total specified by option '-n'
         that are sampled uniformly at random from the reference
         database; the remainder are sampled uniformly at random from
-        the non-reference sequences in the pool of all sequences
-        (which is either all AMPHORA Reference Sequences for the given
-        gene or all sequences specified by option '-y'); if this
-        option is set nonnegative (even to 0), then the reference
+        the non-reference sequences in the set of all sequences
+        (specified by option '-g' or option '-y'); if this option is
+        set to a nonnegative number (even to 0), then the reference
         database must exist; if this option is set to a negative
-        number, then all sequences in the pool (even reference db
-        sequencs) can be sampled via option '-n'; by default, it is
-        set to -1>
+        number, then the reference database is ignored during
+        sampling, i.e., the number of sequeces specified by option
+        '-n' is sampled from among all input sequences; by default,
+        the option is set to -1>
 
     -i, --src_file 
        <(alternate to option '-n') fasta file of DNA sequences to be
@@ -172,13 +180,13 @@ Options:
 
     --pad
        <integer, size of pad of 'N's that will be concatenated to each
-        end of each source sequence before they are added to the
-        metasim database and used to generate reads; this is used to
-        create a more realistic length distribution over the reads for
-        a gene family (to get ride of the boundary effect); by
-        default, it is set to the default value of the mean clone
-        length (in simPipeVars.pm); if it is set to 0, no padding is
-        done>
+        end of each full-length sequence before the full-length
+        sequences are added to the metasim database and used to
+        generate reads; this is used to create a more realistic length
+        distribution over the reads for a gene family and to get rid
+        of boundary effects; by default, it is set to the default
+        value of the mean clone length (in simPipeVars.pm); if it is
+        set to 0, no padding is done>
 
     -j, --add_seqs 
        [no value taken; if set, add the sequences specified by option
@@ -186,16 +194,16 @@ Options:
 	existing database); ignored if option '-i' is not set]
 
     --tax_profile_ratio
-       <a number that is used to generate a skewed population in terms
-        of relative abundances of input sequences, for MetaSim;
-        technically, it is the ratio between the second-to-smallest
-        relative abundance and the minimum relative abundance, which
-        is assumed to be 1, of taxa in the simulated community; this
-        value is used to create a taxonomic profile of relative
-        abundances of source sequences, for MetaSim; the abundances
-        are proportional to a geometric distribution for a subset of
-        the source sequences (either half the sequences or until the
-        maximum relative abundance is reached); the remaining
+       <a number that is used to generate a skewed distribution for
+        the relative abundances of sequences in the simulated
+        population; the output is a taxonomic profile with extension
+        '.mprf' for MetaSim; technically, the value of this option is
+        the ratio between the second-to-smallest relative abundance
+        and the minimum relative abundance, which is assumed to be 1,
+        of distinct sequences in the simulated community; the
+        abundances are proportional to a geometric distribution for a
+        subset of the sequences (either half the sequences or until
+        the maximum relative abundance is reached); the remaining
         sequences have relative abundance 1, to elongate the tail of
         the whole distribution; by default, the ratio is set to 1, so
         the whole distribution is uniform>
@@ -336,7 +344,8 @@ Options:
 
     -k, --save_blast_out
        [no value taken; if set, the (large) blast files used for
-        translation are saved; otherwise discard]
+        translation/orientation are saved; by default, they are
+        discarded]
 
     -e, --blast_expect
        <optional expectation value cutoff for blastx; default chosen
@@ -347,19 +356,36 @@ Options:
         blastx; default is 50>
 
     -a, --align
-       [no value taken; if set and an AMPHORA gene family is
-        specified with option '-g', scan the peptide reads (created
-        via option '-x' or input via option '-l') with a modified
-        version of the AMPHORA script MarkerScanner.pl and align them,
-        along with the reference database sequences (if given), to the
-        AMPHORA HMM profile for the specified gene, using the AMPHORA
-        script MarkerAlignTrim.pl; if set and other sequences have
-        been input via option '-y', then align the reads, which have
-        been oriented or translated via option '-x' or input via
-        option '-l' along with the reference database sequences (if
-        given), to the model provided via option '--model'; the
-        alignment method will be cmalign if type is RNA2DNA and
-        hmmalign if the type is PROTEIN]
+       [no value taken; if set and an AMPHORA gene family is specified
+        with option '-g', the peptide reads (created via option '-x'
+        or input via option '-l') are scanned with a modified version
+        of the AMPHORA script MarkerScanner.pl and aligned, along with
+        the reference database sequences (if given), to the AMPHORA
+        HMM 2 profile for the specified gene, using the AMPHORA script
+        MarkerAlignTrim.pl (see option '--hmmer2_path'); if set and
+        other sequences have been input via option '-y', then the
+        reads, which have been oriented or translated via option '-x'
+        or input via option '-l', are aligned, along with the
+        reference database sequences (if specified via option '-v'),
+        to the model in the file provided via option '--model'; the
+        alignment method used is INFERNAL cmalign if the sequence
+        type, specified via option '--type', is DNA converted from RNA
+        ('RNA2DNA'), and the method is HMMER hmmalign if the sequence
+        type is amino acid ('Protein'); the INFERNAL or HMMER commands
+        are expected to be in the user's path]
+
+    --align_source
+       [no value taken; if set, then the full-length sequences that
+        correspond to the final set of reads are aligned, along with
+        the reference database (if given), to the model in the file
+        provided via option '--model'; see option '-a' for details on
+        how the alignment method is decided; this option is ignored if
+        option '-a' is not also selected]
+
+    --hmmer2_path
+       <the path to HMMER 2 binaries, in particular, hmmpfam; used
+        only with AMPHORA; default set in simPipeVars.pm; see also
+        option '-a'>
 
     -l, --tr_reads_file 
        <optional fasta file of peptide translations of simulated
@@ -377,18 +403,20 @@ Options:
 
     --model
        <filename for a file containing the model used for alignment;
-        this option is not used if AMPHORA is being used to align
+        this option is ignored if AMPHORA is being used to align
         sequences; if option '-y' is used and not option '-g', then
         either cmalign or hmmalign will be used to do the alignment
-        (depending on the type), and a model must be provided>
+        (depending on the type), and a model must be provided; see
+        option '-a'>
 
     -z, --noscan 
        [no value taken; if set, scanning will be skipped during the
         alignment via option '-a']
 
     -w, --log
-       [no value taken; if set, some output is written to a .log file
-        instead of the terminal.]  
+       [no value taken; if this option is used, the output that is by
+        default written to the terminal is instead written to a log
+        file.]
 
 };
 
@@ -396,21 +424,26 @@ my $error_msg = qq{
     Check input options, as well as locally customized variables in simPipeVars.pm.
     };
 
-my ($help_flag, $add_seqs_flag, $sim_flag, $blast_flag, $align_flag, $noscan_flag, $save_blast_out_flag, 
-    $log_flag, $log_fh, $log_file, $metasim_log, $metasim_log_init_flag, $metasim_error_conf_file,
-    $gene_symbol, $amphora_path_nondefault, $alt_gene_symbol, $num_seqs, $num_ref_seqs, $type, 
-    $cur_dir, $out_dir, $full_path_cur_dir, $basename, $fullpath_basename, $use_refdb,
-    $ref_db_file_basename, $ref_db_file_pep, $ref_db_file_dna, $alt_seqs_basename,
-    $sample_file_basename, $sample_file_dna, $sample_file_dna_padded,$sample_file_pep, 
-    $pad_size,$src_seqs_dna, 
-    $sample_final_src_seqs, $final_num_src_seqs, $tax_profile_ratio, $tax_profile_max_abundance,
-    $metasim_profile, $metasim_reads_file, $dna_reads_file, $thr_metasim_reads_file,
-    $scanned_pep_reads_file, $filtered_sim_reads_file, $reads_to_align,
-    $num_reads, $num_filtered_reads, $final_num_reads, $no_del_metasim_db_flag, $global_metasim_db_flag,
-    $mean_read_len, $stddev_read_len, $mean_clone_len, $stddev_clone_len,
-    $num_blastdb_hits, $blast_expect_cutoff, $blastdb_name, $blastdb_ne_flag,
-    $frames_file, $trans_file, $tr_reads_file, $hmm_profile, $model, $len_threshold,
-    @args);
+my ($help_flag, $add_seqs_flag, $sim_flag, $blast_flag, $align_flag,
+    $align_src_flag, $noscan_flag, $save_blast_out_flag, $log_flag,
+    $log_fh, $log_file, $metasim_log, 
+    $metasim_error_conf_file, $gene_symbol, $amphora_path_nondefault,
+    $alt_gene_symbol, $num_seqs, $num_ref_seqs, $type, $cur_dir,
+    $out_dir, $full_path_cur_dir, $basename, $fullpath_basename,
+    $use_refdb, $ref_db_file_basename, $ref_db_file_pep,
+    $ref_db_file_dna, $alt_seqs_basename, $sample_file_basename,
+    $sample_file_dna, $sample_file_dna_padded,$sample_file_pep,
+    $pad_size,$src_seqs_dna, $sample_final_src_seqs,
+    $final_num_src_seqs, $tax_profile_ratio,
+    $tax_profile_max_abundance, $metasim_profile, $metasim_reads_file,
+    $dna_reads_file, $thr_metasim_reads_file, $scanned_pep_reads_file,
+    $filtered_sim_reads_file, $reads_to_align, $num_reads,
+    $num_filtered_reads, $final_num_reads, $no_del_metasim_db_flag,
+    $global_metasim_db_flag, $mean_read_len, $stddev_read_len,
+    $mean_clone_len, $stddev_clone_len, $num_blastdb_hits,
+    $blast_expect_cutoff, $blastdb_name, $blastdb_ne_flag,
+    $frames_file, $trans_file, $tr_reads_file, $hmm_profile, $model,
+    $len_threshold, @args);
 
 ####### SET-UP DEFAULT VALUES FOR SOME VARIABLES
 
@@ -471,6 +504,8 @@ GetOptions(
     'blast_expect|e:f' => \$blast_expect_cutoff,
     'tr_reads_file|l:s' => \$tr_reads_file,
     'align|a' => \$align_flag,
+    'align_source' => \$align_src_flag,
+    'hmmer2_path:s' => \$hmmer2_path,
     'drop_len:i' => \$len_threshold,
     'model:s' => \$model,
     'noscan|z' => \$noscan_flag    
@@ -482,19 +517,11 @@ if ($help_flag) {
 }
 
 if (defined ($amphora_path_nondefault)) {
-    define_amphora_paths($amphora_path_nondefault);
+    $amphora_path = File::Spec->rel2abs($amphora_path_nondefault);
+    define_amphora_paths($amphora_path);
 }
 
 ####### FILENAMES & MISC SET-UP
-
-$metasim_log_init_flag = 0;
-
-if ($log_flag) {
-    $log_file = $log_filename_default;
-    $log_file = File::Spec->catfile($out_dir, $log_file);
-    open(LOG, ">$log_file") or die "Cannot open log file $log_file: $!\n";
-    $log_fh = \*LOG;
-} else { $log_fh = \*STDOUT; }
 
 unless ( (-d $out_dir) and (-w $out_dir) ) {
     mkdir($out_dir) or die "Cannot find, write, or make directory $out_dir.\n";
@@ -502,6 +529,20 @@ unless ( (-d $out_dir) and (-w $out_dir) ) {
 
 $fullpath_basename = File::Spec->catfile($out_dir, $basename);
 $fullpath_basename = File::Spec->rel2abs($fullpath_basename);
+
+if ($log_flag) {
+    $log_file = $fullpath_basename.$log_file_ext;
+    open(LOG, ">$log_file") or die "Cannot open log file $log_file: $!\n";
+    print "\nInformation about this run of MetaPASSAGE.pl is being logged in file ".
+	"\n  ".File::Spec->abs2rel($log_file)."\n";
+    $log_fh = \*LOG;
+} else { $log_fh = \*STDOUT; }
+
+if (! (-d $metasim_path)) {
+    print $log_fh "Metasim installation path $metasim_path not found; ignoring.\n";
+}
+
+$metasim_log = $fullpath_basename.'-'.$metasim_log_filename;
 
 if (! defined($type)) {
     $type= $default_type;
@@ -567,14 +608,14 @@ if ($blast_flag or defined($blastdb_name)) {
     }
 }
 
-####### SAMPLE SOURCE SEQUENCES
+####### SAMPLE FULL-LENGTH SEQUENCES FOR POPULATION
 
 if ($num_reads < 0) {
     die "Please specify a positive number of reads!\n";
 }
 
 if (defined ($num_seqs) and ($num_seqs < 0)) {
-    die "Please enter a positive total number of source sequences to sample.\n";
+    die "Please enter a positive total number of full-length sequences to sample.\n";
 } elsif ($num_seqs) {
     if (defined($num_ref_seqs) and ($num_ref_seqs >=0)) {
 	if (!defined ($ref_db_file_basename)) {
@@ -586,18 +627,18 @@ if (defined ($num_seqs) and ($num_seqs < 0)) {
 		"  via option '-v' for sampling purposes.\n";
 	} 
 	if ($num_ref_seqs > $num_seqs) {
-	    die "The number of source sequences to sample from the reference database must be at most the total number of possible source sequences.\n";
+	    die "The number of sequences to sample from the reference database must be at most the total number of full-length sequences to be sampled.\n";
 	}
     }
     # set files names of sampled sequences and related files 
     $sample_file_basename = $fullpath_basename.'-'.$src_filename_default;
     $sample_file_pep = $sample_file_basename.$pep_fasta_ext;
     $sample_file_dna = $sample_file_basename.$dna_fasta_ext;
-    print $log_fh "Sampling $num_seqs source sequences";
+    print $log_fh "Sampling $num_seqs full-length sequences";
     if (defined($num_ref_seqs) and ($num_ref_seqs >=0)) {
-	print " ($num_ref_seqs reference sequences).\n";
+	print $log_fh " ($num_ref_seqs reference sequences).\n";
     } else {
-	print ".\n";
+	print $log_fh ".\n";
     }
     @args = ($num_seqs, $sample_file_basename);
     if (defined($alt_seqs_basename)) {
@@ -625,7 +666,8 @@ if (defined ($num_seqs) and ($num_seqs < 0)) {
 	die "Trouble sampling sequences and writing to file ". File::Spec->abs2rel($sample_file_pep)."!\n";
     }
     if (-e $sample_file_dna) {
-	print "DNA sequences have been sampled and written to ".File::Spec->abs2rel($sample_file_dna).".\n";
+	print $log_fh "DNA sequences have been sampled and written to ".
+	    File::Spec->abs2rel($sample_file_dna).".\n";
     } else {
 	die "Trouble sampling and writing sequences to file!\n";
     }    
@@ -648,22 +690,16 @@ if (defined ($num_seqs) and ($num_seqs < 0)) {
 ####### GENERATE SIMULATED READS USING METASIM
 
 if ( (defined ($sample_file_dna) and $add_seqs_flag) or ($num_seqs and $sim_flag) ) {
-    # add source sequences to the MetaSim database
-    if (!$metasim_log_init_flag) {
-	$metasim_log = get_basename($sample_file_dna);
-	$metasim_log = File::Spec->catfile($out_dir, $metasim_log.'-'.$metasim_log_filename);
-	if (-e $metasim_log) {
-	    unlink($metasim_log);
-	} 
-	$metasim_log_init_flag = 1;
-	$metasim_log = File::Spec->rel2abs($metasim_log);
-    }
-    print $log_fh "Adding sequences from ". File::Spec->abs2rel($sample_file_dna) ." to the MetaSim database.\n";
+    # pad sequences
     if ($pad_size) {
 	($sample_file_dna_padded, $pad_size)=seqs_pad($sample_file_dna, $pad_size);
     }
-    print $log_fh ''. File::Spec->abs2rel($sample_file_dna_padded)." written with source sequences padded on each end with $pad_size \'N\'s.\n";
+    print $log_fh "Full-length sequences padded on each end with $pad_size \'N\'s were written to file".
+	"\n  ". File::Spec->abs2rel($sample_file_dna_padded)."\n";
+    print $log_fh "Adding sequences from ". File::Spec->abs2rel($sample_file_dna) ." to the MetaSim database.\n";
     $src_seqs_dna = defined($sample_file_dna_padded) ? $sample_file_dna_padded : $sample_file_dna;    
+
+    # add sampled full-length sequences to the MetaSim database
     if (! $global_metasim_db_flag) {
 	# default behavior: run metasim from the output directory (because metasim stores its database in calling dir)
 	chdir($out_dir) || die "Cannot change directories to output directory: $out_dir: $!\n";
@@ -682,7 +718,7 @@ if ( !(defined($metasim_profile)) and ($num_seqs or defined($src_seqs_dna) )
     if (! (-e $metasim_profile)) {
 	die "Error creating taxonomic MetaSim profile $metasim_profile.\n";
     }
-    print $log_fh "Taxonomic MetaSim profile written in $metasim_profile.\n";    
+    print $log_fh "Taxonomic profile for MetaSim written to $metasim_profile.\n";    
 } elsif (defined($metasim_profile)) {
     # or use given taxonomic profile
     if (! (-e $metasim_profile)) {
@@ -698,16 +734,7 @@ if ($sim_flag) {
 	die "Cannot find taxonomic profile $metasim_profile for MetaSim.\n";
     }
     $metasim_profile = File::Spec->rel2abs($metasim_profile);
-    if (!$metasim_log_init_flag) {
-	$metasim_log = get_basename($metasim_profile, ($metasim_profile_ext));
-	$metasim_log = File::Spec->catfile($out_dir, $metasim_log.'-'.$metasim_log_filename);
-	if (-e $metasim_log) {
-	    unlink($metasim_log);
-	} 
-	$metasim_log_init_flag=1;
-	$metasim_log = File::Spec->rel2abs($metasim_log);
-    }
-    print $log_fh "Running MetaSim to create reads.\n";
+    print $log_fh "Running MetaSim to create $num_reads reads.\n";
     $metasim_reads_file = get_basename($metasim_profile, $metasim_profile_ext);
     if ($metasim_reads_file =~ /(.*)-$src_filename_default$/) {
 	$metasim_reads_file = $1;
@@ -747,12 +774,15 @@ if ($sim_flag) {
 	chdir($full_path_cur_dir) || die "Cannot change directories back to original directory: $full_path_cur_dir: $!\n";
 	$metasim_reads_file = File::Spec->abs2rel($metasim_reads_file);
     }
+    print $log_fh "MetaSim run information written to ".File::Spec->abs2rel($metasim_log)."\n";
     if (! (-e $metasim_reads_file)) {
 	die "Error creating reads file $metasim_reads_file!\n";
     }
     print $log_fh "Simulated reads written to file ". File::Spec->abs2rel($metasim_reads_file).".\n";
-    print $log_fh "Metasim database deleted.\n";
-    
+    unless ($no_del_metasim_db_flag) {
+	print $log_fh "MetaSim database deleted.\n";
+    }
+
 } elsif (defined ($metasim_reads_file) and !(-e $metasim_reads_file)) {
     # use specified file of metagenomic reads
     die "Cannot find file $metasim_reads_file containing simulated metagenomic reads.\n";
@@ -773,7 +803,7 @@ if (defined ($metasim_reads_file)) {
 }
 ####### POSSIBLY FILTER NOW, IF NO TRANSLATION OR ALIGNMENT IS BEING DONE,
 #######    ACCORDING TO TARGET NUMBER DESIRED;
-####### ALSO CREATE A FILE OF SOURCE SEQUENCES CORRESPONDING TO THE FINAL SET OF READS 
+####### ALSO CREATE A FILE OF FULL-LENGTH SEQUENCES CORRESPONDING TO THE FINAL SET OF READS 
 
 if ((!$align_flag) and (!$blast_flag) and ($num_seqs or defined($sample_file_dna)) and 
     (defined($thr_metasim_reads_file) or defined($tr_reads_file)) ) {
@@ -783,22 +813,23 @@ if ((!$align_flag) and (!$blast_flag) and ($num_seqs or defined($sample_file_dna
     } elsif ($num_filtered_reads > 0) {	
 	print $log_fh "Filtering the reads:  choosing a subset of size $num_filtered_reads uniformly at random.\n";
     }   
-    print $log_fh "Determining sources corresponding to final set of reads\n".
-	"  converting the ids of the reads to include the source gene ids.\n";    
     ($filtered_sim_reads_file, $sample_final_src_seqs, $final_num_reads, $final_num_src_seqs) =
 	filter_reads($reads_to_filter, $num_filtered_reads, $sample_file_dna, $out_dir, 
 		     ($type eq PROTEIN) ? $sample_file_pep : $sample_file_dna); 
+    print $log_fh "Determining the full-length sequences that correspond to the final set of reads\n".
+    print $log_fh "Each read id converted to include the id for the corresponding full-length sequence.\n";
     print $log_fh ''.$final_num_reads. " reads written to ". File::Spec->abs2rel($filtered_sim_reads_file).".\n";
     if (-e $sample_final_src_seqs) {
 	print $log_fh ''.$final_num_src_seqs.
-	    " source sequences for these reads written to file ". $sample_final_src_seqs."\n";
+	    " full-length sequences corresponding to these reads written to file ". $sample_final_src_seqs."\n";
     }
 } 
 
 ####### FORMAT BLAST DATABASE (IF NECESSARY)
 
 if ($blastdb_ne_flag) {
-    print $log_fh "Cannot find at least one of the blast database files with base name $blastdb_name.  Building a new blast database.\n";
+    print $log_fh "Cannot find at least one of the blast database files with base name $blastdb_name.\n".
+	"  Building a new blast database.\n";
     my $blast_seqs_file;
     if ($use_refdb) {
 	$blast_seqs_file = ($type eq PROTEIN) ? $ref_db_file_pep : $ref_db_file_dna;
@@ -824,7 +855,8 @@ if ($blastdb_ne_flag) {
     }
 } 
 
-####### BLAST READS AGAINST BLAST DATABASE (FORMATTED FROM SOURCE SEQUENCES) TO ORIENT OR TRANSLATE READS
+####### BLAST READS AGAINST BLAST DATABASE (FORMATTED FROM FULL-LENGTH
+####### SEQUENCES) TO ORIENT OR TRANSLATE READS
 
 if ($blast_flag) {
     my @blastArgs = ('-d', $blastdb_name);
@@ -860,7 +892,8 @@ if ($blast_flag) {
     print $log_fh ''.( ($type eq PROTEIN) ? "Frame" : "Orientation")." data written in file ". 
 	File::Spec->abs2rel($frames_file).".\n";
     print $log_fh "Reads ". ( ($type eq PROTEIN) ? "translated (possibly in more than one frame)" :
-			      "correctly oriented")."\n  and written in file". File::Spec->abs2rel($trans_file).".\n";
+			      "correctly oriented")."\n  and written in file ". 
+			      File::Spec->abs2rel($trans_file).".\n";
     
 }
 
@@ -873,24 +906,25 @@ if ( (!$noscan_flag) and (defined($gene_symbol)) and ($type eq PROTEIN) ) {
     unless (-e $trans_file) {
 	die "Cannot find file $trans_file containing reads to be scanned.\n";
     }
-    print $log_fh "Scanning peptide reads with modified AMPHORA code MarkerScannerAlt for recognizable\n".
-	"  $gene_symbol fragments.  This may take some time.\n"; 	  
-    @args = ('-g', $gene_symbol, '-r', $trans_file, '-d', $out_dir);
+    print $log_fh "Scanning peptide reads with modified AMPHORA code MarkerScannerAlt ".
+	"\n  for recognizable $gene_symbol fragments; this may take some time.\n"; 	  
+    @args = ('-g', $gene_symbol, '-r', $trans_file, '-d', $out_dir, '-a', $amphora_path, '-h', $hmmer2_path);
     $scanned_pep_reads_file = run_markerScannerAlt(@args);
     if (!(-e $scanned_pep_reads_file)) {
 	die "Error scanning reads!  Expecting file $scanned_pep_reads_file to have been written but cannot find it.\n";
     }
     my $count = count_seqs($scanned_pep_reads_file);
     print $log_fh "$count sequences picked up by modified AMPHORA code MarkerScannerAlt\n".
-	"  as (possibly partial) $gene_symbol sequences;\n";
-    print $log_fh "  results of scan written to ". File::Spec->abs2rel($scanned_pep_reads_file).".\n";    
+	"  as (possibly partial) $gene_symbol sequences.\n";
+    print $log_fh "  Results of scan written to ". File::Spec->abs2rel($scanned_pep_reads_file).".\n";    
     $reads_to_align = $scanned_pep_reads_file;
 } else {
     $reads_to_align = $trans_file;   
 }
 
-####### POSSIBLY FILTER READS, ACCORDING TO TARGET NUMBER DESIRED
-####### ALSO CREATE A FILE OF SOURCE SEQUENCES CORRESPONDING TO THE FINAL SET OF READS 
+####### POSSIBLY FILTER READS, ACCORDING TO TARGET NUMBER DESIRED ALSO
+####### CREATE A FILE OF FULL-LENGTH SEQUENCES CORRESPONDING TO THE
+####### FINAL SET OF READS
 
 if ( $num_seqs or defined($sample_file_dna) ) {
     if ($num_filtered_reads < 0) {
@@ -901,16 +935,16 @@ if ( $num_seqs or defined($sample_file_dna) ) {
     unless (-e $reads_to_align) {
 	die "Cannot find file $reads_to_align containing reads to be filtered.\n";
     }
-    print $log_fh "Also converting the id of the read to include the source gene id.\n";	    
     ($filtered_sim_reads_file, $sample_final_src_seqs, $final_num_reads, $final_num_src_seqs) =
 	filter_reads($reads_to_align, $num_filtered_reads, $sample_file_dna, $out_dir, 
 		     ($type eq PROTEIN) ? $sample_file_pep : $sample_file_dna ); 
-    
+    print $log_fh "Determining the full-length sequences that correspond to the final set of reads\n";
+    print $log_fh "Each read id converted to include the id for the corresponding full-length sequence.\n";
     print $log_fh ''.$final_num_reads. " reads written to ". File::Spec->abs2rel($filtered_sim_reads_file).".\n";
     $reads_to_align = $filtered_sim_reads_file;
     if (-e $sample_final_src_seqs) {
 	print $log_fh ''.$final_num_src_seqs.
-	    " source sequences for these reads written to file ". File::Spec->abs2rel($sample_final_src_seqs)."\n";
+	    " full-length sequences corresponding to these reads written to file ". File::Spec->abs2rel($sample_final_src_seqs)."\n";
     }
 } 
 
@@ -951,7 +985,7 @@ if ($align_flag) {
     print $log_fh "\n  to ".
 	( !defined($alt_seqs_basename) ? "AMPHORA profile HMM for $gene_symbol, ".
 	  "using AMPHORA script MarkerAlignTrim.pl;\n"."  also, trimming according to the mask;\n" 
-	  : "input model $model, using $aligner -- "."\n" ).	  	      
+	  : "input model $model, using $aligner;\n" ).	  	      
 	  "  this may take some time.\n";	
     
     my ($alignment, $align_log, %align_args);
@@ -959,6 +993,7 @@ if ($align_flag) {
     %align_args = ('-r', $reads_to_align, '-d', $out_dir, '-p', 1, '-t', $type, '-a', $aligner);
     if (defined($gene_symbol)) {
 	$align_args{'-g'}= $gene_symbol;
+	$align_args{'--amphora'} = $amphora_path;
     } elsif (defined($model)) {
 	$align_args{'-m'}=$model;
     } else {
@@ -976,16 +1011,17 @@ if ($align_flag) {
 	die "Error in alignment process!  Expecting file $alignment to have been created, but cannot find it.\n";
     }
     if (-e $align_log) {
-	print $log_fh "Information about or errors in alignment process\n".
-	    "  written to log file ".
-	    File::Spec->abs2rel( $align_log ).".\n";
+	print $log_fh "Information about or errors in alignment process written to log file ".
+	    "\n  ".File::Spec->abs2rel( $align_log ).".\n";
     }
-    print $log_fh "Reads and reference sequences have been aligned".
-	(($aligner eq AMPHORA) ? ",\n   and alignment has been trimmed\n" : "\n").
-	"  and written to file ". File::Spec->abs2rel( $alignment).".\n";
+    print $log_fh "Reads and reference sequences have been aligned to profile;".
+	(($aligner eq AMPHORA) ? ",\n  alignment has been trimmed;" : '').
+	"\n  alignment written to ". File::Spec->abs2rel( $alignment).".\n";
     
-    if ((defined $sample_final_src_seqs) and (-e $sample_final_src_seqs)) {
-	print $log_fh "Aligning the source sequences in ".  File::Spec->abs2rel($sample_final_src_seqs);
+    if ($align_src_flag and (defined $sample_final_src_seqs) and (-e $sample_final_src_seqs)) {
+	print $log_fh "Aligning the full-length sequences in ".  
+	    File::Spec->abs2rel($sample_final_src_seqs) .
+	    "\n  that correspond to the final set of reads";
 	if ($use_refdb) {
 	    if ($type eq PROTEIN) { 
 		print $log_fh "\n  and reference sequences in $ref_db_file_pep ";
@@ -993,10 +1029,11 @@ if ($align_flag) {
 		print $log_fh "\n  and reference sequences in $ref_db_file_dna ";
 	    }
 	}
-	print "\n  to ".
+	print $log_fh "\n  to ".
 	    ( !defined($alt_seqs_basename) ?  "AMPHORA profile HMM for $gene_symbol, ".
-	      "using AMPHORA script MarkerAlignTrim.pl;\n"."  also, trimming according to the mask;\n" 
-	      : "input model $model using $aligner -- "."\n" ).	  	      
+	      "using AMPHORA script MarkerAlignTrim.pl;\n".
+	      "  also, trimming the alignment according to the mask;\n" 
+	      : "input model $model using $aligner;\n" ).	  	      
 	      "  this may take some time.\n";	
 	$align_args{'-r'}=$sample_final_src_seqs;
 	$align_args{'-p'}=0;
@@ -1009,7 +1046,7 @@ if ($align_flag) {
 		"  written to log file ".
 		File::Spec->abs2rel( $align_log ).".\n";
 	}
-	print $log_fh "Source sequences and reference sequences have been aligned".
+	print $log_fh "Full-length sequences and reference sequences have been aligned".
 	    (($aligner eq AMPHORA) ? ",\n  and alignment has been trimmed\n" : "\n").
 	    "  and written to file ". File::Spec->abs2rel($alignment).".\n";
     }
