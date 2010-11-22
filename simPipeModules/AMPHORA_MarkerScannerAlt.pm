@@ -58,13 +58,27 @@ my (%markerlist, %seq, %Hmmlength) = ();
 my $AMPHORA_home = $amphora_path;
 my $in_file;
 
-sub markerScannerAlt(@) {
+sub markerScannerAlt($;$$) {
 
-    # Riesenfeld: Slightly changed input message
+    # Riesenfeld: Slightly changed input message and added input paths
     $in_file = shift(@_);    
-    my $usage = qq~ Usage: markerScannerAlt <fasta-file> ~;
+    my $usage = qq~ Usage: markerScannerAlt <fasta-file> <AMPHORA-path> <hmmer2-path>~;
     
     die $usage unless (defined ($in_file) and (-f $in_file));
+    my $path = shift(@_);
+    if (defined ($path)) {
+	$AMPHORA_home = $path;
+    }
+    if (!(-d $AMPHORA_home)) {
+	die "Cannot find AMPHORA at $AMPHORA_home!\n";
+    }
+    $path = shift(@_);
+    if (defined($path)) {
+	$hmmer2_path = $path;
+    }
+    if (! (-d $hmmer2_path)) {
+	die "Cannot find HMMER2 binaries at $hmmer2_path!\n";
+    }
     
     get_marker_list();
     read_marker_hmms();
@@ -85,7 +99,13 @@ sub markerScannerAlt(@) {
     get_seq_ids();
     
     # HMM search
-    my $cmd = $hmmer2_path."hmmpfam -Z 5000 -E 1e-3 $AMPHORA_home/Marker/markers.swhmm $$.candidate > $$.hmmsearch";	
+    # Riesenfeld: using File::Spec->catfile instead of string concatenation
+    my $hmmpfam_path = File::Spec->catfile($hmmer2_path, 'hmmpfam');
+    if (! (-e $hmmpfam_path)) {
+	die "Cannot find hmmpfam!\n";
+    }
+    my $cmd = "$hmmpfam_path -Z 5000 -E 1e-3 ".
+	File::Spec->catfile($AMPHORA_home, "Marker/markers.swhmm")." $$.candidate > $$.hmmsearch";	
     system ($cmd);
     
     # fix the number of sequences in the database for E-value calculation
@@ -97,7 +117,10 @@ sub markerScannerAlt(@) {
 
 ####################################################################################################################
 sub get_marker_list {
-    open (IN, "$AMPHORA_home/Marker/marker.list") || die "Can't open $AMPHORA_home/Marker/marker.list";
+    # Riesenfeld: using File::Spec->catfile instead of string concatenation
+    my $marker_list = File::Spec->catfile($AMPHORA_home, "Marker/marker.list");
+    open (IN, $marker_list)
+	|| die "Can't open $marker_list: $!\n";
     while (<IN>) {
 	chop;
 	/^(\S+)/;
@@ -107,7 +130,9 @@ sub get_marker_list {
 }
 
 sub read_marker_hmms {
-    open (IN, "$AMPHORA_home/Marker/markers.swhmm") || die "Can't open $AMPHORA_home/Marker/markers.swhmm\n";
+    # Riesenfeld: using File::Spec->catfile instead of string concatenation
+    my $markers = File::Spec->catfile($AMPHORA_home, "Marker/markers.swhmm");
+    open (IN, $markers) || die "Can't open $markers: $!\n";
     my $name;
     while (<IN>) {
         chop;

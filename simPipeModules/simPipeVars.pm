@@ -7,7 +7,8 @@
 # SimPipeModules.
 #
 # All variables below can be customized except the following: 
-#     $metasim_profile_ext, $metasim_fasta_ext, and $metasim_model_name, 
+#     $metasim_profile_ext, $metasim_fasta_ext, and $metasim_model_name;
+#     $amphora_ref_file_ext, $amphora_ref_aln_file_ext;
 # since these depend on the way MetaSim works internally.
 
 package simPipeVars;
@@ -15,8 +16,10 @@ use strict;
 use File::Spec;
 require Exporter;
 our @ISA = qw(Exporter);
-our %EXPORT_TAGS = (simpipe => [qw($default_seqs_filename $ref_db_default_filename_part $ref_db_default_size  				                               $sim_basename_default $src_filename_default
-				   $single_reads_name $frames_file_ext $strand_file_ext $log_filename_default
+our %EXPORT_TAGS = (simpipe => [qw($default_seqs_filename $ref_db_default_filename_part 
+                                   $ref_db_default_size  				                          
+                                   $sim_basename_default $src_filename_default
+				   $single_reads_name $frames_file_ext $strand_file_ext 
                                    $final_src_seqs_name $orientation_name $align_log_filename 
                                    $pad_filename_part $nopad_filename_part &count_seqs
                                    AMPHORA CMALIGN HMMALIGN @aligners)],
@@ -70,39 +73,60 @@ use constant {
 our @aligners = (AMPHORA, CMALIGN, HMMALIGN);
 
 # For MetaPASSAGE.pl specifically
-our ($default_seqs_filename, $ref_db_default_filename_part, $ref_db_default_size,      
-     $sim_basename_default, $src_filename_default, $single_reads_name, $frames_file_ext, $strand_file_ext,
-     $log_filename_default, $final_src_seqs_name, $orientation_name, $align_log_filename, 
-     $pad_filename_part, $nopad_filename_part);
+our ($default_seqs_filename, $ref_db_default_filename_part,
+     $ref_db_default_size, $sim_basename_default,
+     $src_filename_default, $single_reads_name, $frames_file_ext,
+     $strand_file_ext, $final_src_seqs_name, $orientation_name,
+     $align_log_filename, $pad_filename_part, $nopad_filename_part);
 
-$ref_db_default_filename_part = 'RefDB'; # Part of the filename for the database of reference sequences chosen from AMPHORA
-$ref_db_default_size = 100;           # Default size of reference database
-
-$sim_basename_default = 'sim';  # Part of base filename for files related to one simulation run
-$src_filename_default = 'src';  # Part of file name for the sample of source sequences used to generate reads
-$single_reads_name = '-sr';      # Part of label used for file containing at most one read per gene sequence
-$frames_file_ext = '.frames';    # File extension for file of frame data written by MetaPASSAGE.pl
-$strand_file_ext = '.orient';    # File extension for file of strand data written by MetaPASSAGE.pl
-$log_filename_default = 'simPipe.log';  # Filename for MetaPASSAGE.pl log file
-$final_src_seqs_name = '-final';     # Part of label for file containing the source sequences for the filtered set of reads
-$orientation_name='-or';   # Part of label for file containing the correctly oriented reads (for RNA or DNA)
-$align_log_filename = '-align.log';  # part of name for file that contains stderr output from alignment program
-$pad_filename_part = '-pd';    # part of file name for file containing padded sequences
-$nopad_filename_part = '-rp';   # part of the file name to indicate pads have been removed
+$ref_db_default_filename_part = 'RefDB'; # Part of default file name
+					 # for the database of
+					 # reference sequences
+$ref_db_default_size = 100; # Default size of reference database
+$sim_basename_default = 'sim'; # Part of default base filename for
+			       # files related to one simulation run
+$src_filename_default = 'src'; # Part of label for file containing
+			       # sample of full-length sequences used
+			       # to generate reads
+$single_reads_name = '-sr'; # Part of label for file containing at
+			    # most one read per gene sequence
+$frames_file_ext = '.frames'; # File extension for file of frame data
+			      # written by MetaPASSAGE.pl
+$strand_file_ext = '.orient'; # File extension for file of strand data
+			      # written by MetaPASSAGE.pl
+$final_src_seqs_name = '-final'; # Part of label for file containing
+				 # the full-length sequences for the
+				 # filtered set of reads
+$orientation_name='-or'; # Part of label for file containing the
+			 # correctly oriented reads (for RNA or DNA)
+$align_log_filename = '-align.log'; # Part of label for file that
+				    # contains stderr output from
+				    # alignment program
+$pad_filename_part = '-pd'; # Part of label for file containing padded
+			    # sequences
+$nopad_filename_part = '-rp'; # Part of label for file to indicate
+			      # pads have been removed
 
 # AMPHORA-related
 our ($amphora_path, $amphora_ref_seq_path, $amphora_ref_seq_wpads_path,
      $amphora_ref_file_ext, $amphora_ref_aln_file_ext,
      $amphora_marker_profile_path, $amphora_genome_tree, $amphora_scripts_path, 
      $amphora_markerscanner_altscript, $hmmer2_path, $ncbi_blast_path, $gene_symbol_default);
-# path to AMPHORA
-# $amphora_path = '/usr/local/AMPHORA/';  # this variable can also be set by an input parameter to MetaPASSAGE.pl
-$amphora_path = '/home/sriesenfeld/local/AMPHORA/';  # this variable can also be set by an input parameter to MetaPASSAGE.pl
-$amphora_ref_file_ext = '.pep';       # file extension of AMPHORA file containing unaligned amino acid reference sequences
-$amphora_ref_aln_file_ext = '.aln';   # file extension of AMPHORA file containing aligned amino acid reference sequences 
-define_amphora_paths();               # defines needed subdirectories and files for using AMPHORA (see below)
-# path for HMMER Ver 2 executables
-$hmmer2_path = '/home/Common/opt/Bio/hmmer-2.3.2/bin/';
+# Path to AMPHORA $amphora_path variable can also be set by an input
+# parameter to MetaPASSAGE.pl
+$amphora_path = '/usr/local/AMPHORA/';
+
+$amphora_ref_file_ext = '.pep'; # File extension used by AMPHORA for
+				# file containing unaligned amino acid
+				# reference sequences
+$amphora_ref_aln_file_ext = '.aln'; # File extension used by AMPHORA
+				    # for file containing aligned
+				    # amino acid reference sequences
+define_amphora_paths(); # Defines needed subdirectories and files for
+			# using AMPHORA (see below)
+$hmmer2_path = '/usr/local/hmmer2/bin/'; # Path to HMMER Ver 2
+					 # executables (incl. hmmpfam)
+
 # path for NCBI-BLAST programs (leave empty if they are in the default $PATH)
 $ncbi_blast_path = '';
 # default gene family to use if none is specified
@@ -127,7 +151,7 @@ $metasim_profile_ext = '.mprf';  # Taxonomic profile file extension used by Meta
 $metasim_fasta_ext = '.fna';     # Fasta file extension used by MetaSim -- don't change
 $metasim_sanger_name = '-Sanger';  # Error-free-model name used by MetaSim to label files -- don't change
 $metasim_error_conf_name = '-Empirical';  # Empirical error-model name used by MetaSim to label files -- don't change
-$metasim_log_filename = 'metasim.log';   # part of simPipe local name of log for MetaSim
+$metasim_log_filename = 'metasim.log';   # part of MetaPASSAGE local name of log for MetaSim
 $metasim_filename_default = '-reads';    # Part of default name for metasim reads file used by MetaPASSAGE.pl
 $metasim_hdr_pattern='^>(\S+).*SOURCE_.=.(\w+)';  # the pattern of the headers for the reads generated by MetaSim
 $num_reads_default = 500;         # Default number of reads passed as an argument to MetaSim

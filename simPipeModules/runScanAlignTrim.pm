@@ -42,11 +42,13 @@ use AMPHORA_MarkerScannerAlt qw(markerScannerAlt);
 					      $working_directory);
   Returns : a filename 
   Args : A hash %args where the keys of %args must include '-r' and
-    '-g' and may optionally include '-d' and '-f'. $args{'-r'} is a
-    filename of peptide reads. $args{'-g'} is a string used to name
-    one of the gene families in AMPHORA. $args{'-d'} is the directory
-    where output files should be written. $args{'-f'} is the desired
-    name of the output file.
+    '-g' and may optionally include '-d', '-f', '-h', and
+    '-a'. $args{'-r'} is a filename of peptide reads. $args{'-g'} is a
+    string used to name one of the gene families in
+    AMPHORA. $args{'-d'} is the directory where output files should be
+    written. $args{'-f'} is the desired name of the output
+    file. $args{'-a'} is the path to the AMPHORA
+    directory. $args{'-h'} is the path to HMMER 2 binaries.
 
 =cut
 
@@ -67,7 +69,14 @@ sub run_markerScannerAlt (%) {
     if (!($outdir = $options{'-d'})) {
 	$outdir = $curdir; 
     }    
-    $outdir = File::Spec->rel2abs( $outdir ) ;
+    $outdir = File::Spec->rel2abs( $outdir ) ;    
+    if (defined ($options{'-a'})) {
+	$amphora_path = $options{'-a'};
+	define_amphora_paths($amphora_path);
+    }
+    if (defined ($options{'-h'})) {
+	$hmmer2_path = $options{'-h'};
+    }
     my $scanned_reads;
     if (!($outfile = $options{'-f'})) {
 	my $basename = get_basename($readsfile, $pep_fasta_ext);
@@ -82,7 +91,7 @@ sub run_markerScannerAlt (%) {
     copy($readsfile, $stuff_to_scan) or 
 	die "Cannot copy $readsfile to temporary directory $tempdir to run (alternate) AMPHORA scan: $!\n";
     chdir ($tempdir) or die "Cannot move to temporary working directory $tempdir to run AMPHORA scan: $!\n";
-    markerScannerAlt($stuff_to_scan);
+    markerScannerAlt($stuff_to_scan, $amphora_path, $hmmer2_path);
     
     my $temp_outfile = $gene.$amphora_ref_file_ext;
     
@@ -127,24 +136,26 @@ sub run_markerScannerAlt (%) {
     and the second contains a log of output from the alignment processes
   Args : A hash %args where the keys of %args must include '-r' and
     may include '-g', '-a', '-p', '-m', and '-t'; other completely
-    optional keys are '-b', '-d', '-l', and '-f'. $args{'-r'} is a
-    file of sequences, either reads or full-length, from the same gene
-    family.  If the gene family is from AMPHORA, then it should be
-    specified with $arg{'-g'}. Otherwise, $args{'-a'} should specify
-    the method of alignment to be used, either 'cmalign' from INFERNAL
-    or 'hmmalign' from HMMER. (This program must be in the user path.)
-    If the sequences to be aligned are not full-length, then
-    $arg{'-p'} should be set to 1. If any non-AMPHORA method of
-    alignment is chosen, then $args{'-m'} should be a file containing
-    a profile model for the gene family corresponding to the alignment
-    method. If non-peptide sequences are being aligned $args{'-t'}
-    must be set to 'RNA2DNA', which means the sequences are RNA
-    sequences that have been converted to DNA (the only non-amino-acid
-    option implemented currently). $args{'-b'} is a file containing
-    full-length 'reference database' sequences from the gene family.
-    $args{'-d'} is the directory where where output files should be
+    optional keys are '-b', '-d', '-l', '-f', and '--amphora'.
+    $args{'-r'} is a file of sequences, either reads or full-length,
+    from the same gene family.  If the gene family is from AMPHORA,
+    then it should be specified with $arg{'-g'}. Otherwise,
+    $args{'-a'} should specify the method of alignment to be used,
+    either 'cmalign' from INFERNAL or 'hmmalign' from HMMER. (This
+    program must be in the user path.)  If the sequences to be aligned
+    are not full-length, then $arg{'-p'} should be set to 1. If any
+    non-AMPHORA method of alignment is chosen, then $args{'-m'} should
+    be a file containing a profile model for the gene family
+    corresponding to the alignment method. If non-peptide sequences
+    are being aligned $args{'-t'} must be set to 'RNA2DNA', which
+    means the sequences are RNA sequences that have been converted to
+    DNA (the only non-amino-acid option implemented
+    currently). $args{'-b'} is a file containing full-length
+    'reference database' sequences from the gene family.  $args{'-d'}
+    is the directory where where output files should be
     written. $args{'-l'} specifies the desired log file
-    name. $args{'-f'} is the desired name of the output file.
+    name. $args{'-f'} is the desired name of the output
+    file. $args{'--amphora'} is the path to AMPHORA.
 
 =cut
 
@@ -161,6 +172,11 @@ sub run_alignTrim (%) {
     $aligner = $options{'-a'};  # 0 is AMPHORA, 1 is cmalign (for now)
     $type = $options{'-t'}; 
     $model = $options{'-m'};
+    if (defined( $options{'--amphora'})) {
+	$amphora_path = $options{'--amphora'};
+	define_amphora_paths($amphora_path);
+    }
+    
     if (!$type) { $type = PROTEIN };
     if (!$aligner) { $aligner = AMPHORA };
     if (!scalar(grep($aligner, @aligners))) {

@@ -223,10 +223,10 @@ sub run_blast_transeq ($$$;$$) {
 }
 
 
-# Scans for the next set of frames (BLASTX) or strand (BLASTN) data
-# and saves the information in given hashes; returns the short query
-# name, the long query name, the best expect value over all frames or
-# strands; returns 0 if fails.
+# Scans for the next query and its frames (BLASTX) or strand (BLASTN)
+# data, and saves the processed information in given hashes; returns
+# the short query name, the long query name, the best expect value
+# over all frames or strands; returns 0 if fails.
 
 sub getFrames ($$$$$$) {
     
@@ -285,14 +285,14 @@ sub getFrames ($$$$$$) {
 		$short_queryname = "$1";
 		# print "Looking at query $short_queryname...\n";
 	    } else {	
-		print ("line: $line\n");
+		# print ("line: $line\n");
 		$short_queryname = ''; 
-		print "Query name not formatted as expected.\n";
+		print STDERR "Query name not formatted as expected.\n";
 	    }
 	} elsif ($line =~ />(.*)/) {
 	    $copying_hitname=1;
 	    $cur_hitname = $1;
-	} elsif ($line =~ /Expect = (\S+)/) {
+	} elsif ($line =~ /Expect\S* = (\S+)/) {
 	    $curval = $1;
 	    $curval =~ s/^(e)(.*)/1e$2/;
 	} elsif (($type eq PROTEIN) and ($line =~ /Frame = (\S+)/)) {
@@ -313,8 +313,8 @@ sub getFrames ($$$$$$) {
 	if ($process_key_flag) {
 	    $process_key_flag=0;
 	    if ( (!defined($curkey)) or (!defined($curval)) or (!defined($cur_hitname)) ) {
-		print "Blast output not formatted as expected, in processing query $short_queryname.\n";
-		print "  ".(($type eq PROTEIN) ? "Frame" : "Strand"). " data may have errors.\n";
+		print STDERR "Blast output not formatted as expected, in processing query $short_queryname.\n";
+		print STDERR "  ".(($type eq PROTEIN) ? "Frame" : "Strand"). " data may have errors.\n";
 	    } else {
 		$distinctFramesr->{$curkey}=1;
 		if ($bestExpectsr->{$curkey} > $curval) {

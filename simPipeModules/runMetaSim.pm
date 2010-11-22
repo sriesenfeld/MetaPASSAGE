@@ -117,7 +117,7 @@ sub run_metasim(%) {
     # Name of MetaSim output file is chosen by MetaSim based on input file;
     # name of error log is also chosen by MetaSim.    
 
-    my $errorLog;
+    my ($errorLog, $cmd);
     if (-e $metasim_path) {
 	$errorLog = File::Spec->catfile($metasim_path, $metasim_error_log_name); 
     }
@@ -155,7 +155,9 @@ sub run_metasim(%) {
 	die "Cannot find the error config model input $err_conf_file.\n";
     }
     my ($out_file, $out_fh, $tempdir_flag);
-    unless ($options{'-a'} or $options{'-m'} or $options{'-x'}) {die "Missing option values in run_metasim.\n";}
+    unless ($options{'-a'} or $options{'-m'} or $options{'-x'}) { 
+	die "Missing option values in run_metasim.\n";
+    }
     if ($options{'-f'}) {
 	$out_file = $options{'-f'};
 	open(OUT_MS, ">>$out_file") or die "Cannot open log $out_file: $!\n";
@@ -175,10 +177,13 @@ sub run_metasim(%) {
 	unless (-e $fastafile) { die "Cannot find file $fastafile of sequences to add to MetaSim database.\n";}
 	# remove old metasim database so there are no conflicts in the names of matching gene sequences
         # print "Adding sequences from $fastafile to MetaSim database.\n";	
+	$cmd = "MetaSim cmd --add-files $fastafile";
+	print $out_fh "\nCommand given: \n$cmd\n";
 	eval {
-	    $returnVal = qx(MetaSim cmd --add-files $fastafile);
+	    $returnVal = qx($cmd);
+	    print $out_fh "\nMetaSim returns: \n$returnVal\n";
 	    if (defined ($errorLog)) {
-		print $out_fh "MetaSim returns: \n$returnVal\n";
+		print $out_fh "\nMetaSim error log: \n";
 		printErrorLog($errorLog, $out_fh);
 	    }
 	};
@@ -216,17 +221,17 @@ sub run_metasim(%) {
 	# assume sequences are ***circular***.  Not much I seem to be
 	# able to do anything about this from the command line, so
 	# adding padding and generating extra reads is recommended.
-	my $cmd;
 	if (!defined($err_conf_file)) {
 	    $cmd = "MetaSim cmd --reads $num_reads --clones-mean $clones_mean --clones-param2 $clones_param2 -d $workingdir --uniform-weights --sanger --sanger-mean $mean_read_len --sanger-param2 $stddev_read_len --sanger-err-start 0 --sanger-err-end 0 --sanger-deletions 0 --sanger-insertions 0 --sanger-mate-probability $mate_prob $profilefile";
 	} else {
 	    $cmd = "MetaSim cmd -mg $err_conf_file --reads $num_reads -d $workingdir --uniform-weights $profilefile";
 	}
-	print "$cmd\n";
+	print $out_fh "\nCommand given: \n$cmd\n";
 	eval {
 	    $returnVal = qx($cmd);
+	    print $out_fh "\nMetaSim returns: \n$returnVal\n";
 	    if (defined ($errorLog)) {	    
-		print $out_fh "MetaSim returns: \n$returnVal\n";
+		print $out_fh "\nMetaSim error log: \n";
 		printErrorLog($errorLog, $out_fh);
 	    }
 	};
@@ -592,7 +597,7 @@ sub printReturnVal($) {
 sub printErrorLog ($;$) {
     my $errorLog = shift(@_);
     my $fh = shift( @_);
-    if (! $fh) {
+    if (! defined($fh)) {
 	$fh = \*STDOUT;
     }
     print $fh qq{MetaSim 'error.log':\n};
