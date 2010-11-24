@@ -36,10 +36,13 @@ use simPipeVars qw(:metasim :misc_file_ext :simpipe);
 =head2 run_meta_sim
 
  Usage: run_metasim( <%args, a hash of options: require at least '-a'
-   or '-m' option, as described below> )
- Function: Wrapper function for running MetaSim from the command
-   line. By default, uses a Sanger-based sequencing model, but without
-   any sequencing error.
+   or '-m' option, as described below> ) Function: Wrapper function
+   for running MetaSim from the command line. By default, uses a
+   Sanger-based sequencing model, but without any sequencing
+   error. (Sanger is used because it is easy to control from the
+   command line and offers a default of no sequencing error.) There
+   are options for modifying this model or specifying a separate
+   empirical model. Defaults set in simPipeVars.pm.
  Notes: Default values of optional arguments set in simPipeVars.pm.
    The metasim database directory is assumed to be in the current
    directory. This wrapper guesses at the name of the file that
@@ -92,9 +95,9 @@ use simPipeVars qw(:metasim :misc_file_ext :simpipe);
    Key: '-s'; Value: standard deviation of read length distribution,
      parameter passed to MetaSim; default set in simPipeVars.pm
    Key: '-c'; Value: mean value of clone 'fragment length'; set by
-     default to 2*(mean read length)]
+     default to 2*(mean read length)
    Key: '-p'; Value: 'std/max deviation of fragment length distrib';
-     set by default to ceil(.1*(clones mean))]
+     set by default to ceil(.1*(clones mean))
    Key: '-x'; Value: 1, or 0/undefined: if set, remove existing
      database of sequences. If option '-a' is set, then any
      pre-existing database is deleted, before sequences are added to a
@@ -107,9 +110,17 @@ use simPipeVars qw(:metasim :misc_file_ext :simpipe);
      situation.
    Key: '-e'; Value: set to the name of an input error model file,
      which is then used instead of the Sanger (without error) model
-     used by default. (This is used because Sanger is easy to control
-     from the command line and offered a default of no sequencing
-     error.]  
+     used by default. 
+   Key: '--mate_prob'; Value: the probability of paired reads for the
+        MetaSim Sanger error model; default is 0
+   Key: '--err_insert'; Value: the relative insertion rate for the
+        MetaSim Sanger error model; default is 0
+   Key: '--err_delete'; Value: the relative deletion rate for the
+        MetaSim Sanger error model; default is 0
+   Key: '-err_start'; Value: the initial error rate for the MetaSim
+     Sanger error model; default is 0
+   Key: '-err_end'; Value: the final error rate for the MetaSim Sanger
+        error model; default is 0
 
 =cut
 
@@ -129,7 +140,8 @@ sub run_metasim(%) {
     my ($returnVal, $fastafile, $profilefile);
     
     my ($workingdir, $outdir, $readsfile);
-    my ($mean_read_len, $stddev_read_len, $num_reads, $clones_mean, $clones_param2);
+    my ($mean_read_len, $stddev_read_len, $num_reads, $clones_mean, $clones_param2, 
+	$mate_prob, $err_start, $err_end, $err_insert, $err_delete);
     if (! ($mean_read_len = $options{'-l'}) ) {
 	$mean_read_len = $mean_read_len_default;
     }
@@ -146,6 +158,21 @@ sub run_metasim(%) {
     }
     if (! ($clones_param2 = $options{'-p'})) {
 	$clones_param2 = $stddev_clone_len_default;
+    }
+    if (! ($mate_prob = $options{'--mate_prob'})) {
+	$mate_prob = $sanger_mate_prob_default;
+    }
+    if (! ($err_start = $options{'--err_start'})) {
+	$err_start = $sanger_err_start_default;
+    }
+    if (! ($err_end = $options{'--err_end'})) {
+	$err_end = $sanger_err_end_default;
+    }
+    if (! ($err_insert = $options{'--err_insert'})) {
+	$err_insert = $sanger_insert_default;
+    }
+    if (! ($err_delete = $options{'--err_delete'})) {
+	$err_delete = $sanger_delete_default;
     }
     if (! ($outdir = $options{'-d'})) {
 	$outdir = File::Spec->curdir();
@@ -222,7 +249,7 @@ sub run_metasim(%) {
 	# able to do anything about this from the command line, so
 	# adding padding and generating extra reads is recommended.
 	if (!defined($err_conf_file)) {
-	    $cmd = "MetaSim cmd --reads $num_reads --clones-mean $clones_mean --clones-param2 $clones_param2 -d $workingdir --uniform-weights --sanger --sanger-mean $mean_read_len --sanger-param2 $stddev_read_len --sanger-err-start 0 --sanger-err-end 0 --sanger-deletions 0 --sanger-insertions 0 --sanger-mate-probability $mate_prob $profilefile";
+	    $cmd = "MetaSim cmd --reads $num_reads --clones-mean $clones_mean --clones-param2 $clones_param2 -d $workingdir --uniform-weights --sanger --sanger-mean $mean_read_len --sanger-param2 $stddev_read_len --sanger-err-start $err_start --sanger-err-end $err_end --sanger-deletions $err_delete --sanger-insertions $err_insert --sanger-mate-probability $mate_prob $profilefile";
 	} else {
 	    $cmd = "MetaSim cmd -mg $err_conf_file --reads $num_reads -d $workingdir --uniform-weights $profilefile";
 	}

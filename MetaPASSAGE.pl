@@ -220,11 +220,26 @@ Options:
         '-s'; sequences referenced in this profile file should be
         added previously or in this command to the MetaSim database.>
 
+    --metasim_path 
+       <optional string giving the location of the metasim
+        installation directory or wherever MetaSim writes its
+        error.log file by default; used to record the information
+        MetaSim outputs about each simulation run; default, set in
+        simPipeVars.pm, is '/usr/local/metasim'; the functionality is
+        only available if the path exists>
+
     -s, --sim 
        [no value taken; if set, runs MetaSim simulation with either an
         automatically generated profile file, based on sequences
         chosen according to option '-n' or '-i', or a profile file
-        specified by option '-t'.]
+        specified by option '-t'; by default, uses a Sanger-based
+        sequencing model with 454-like read-length distribution and no
+        sequencing error (Sanger is used because it is easy to control
+        from the command line and offers a default of no sequencing
+        error); defaults set in simPipeVars.pm; see options below for
+        modifying aspects of this model; see option
+        '--ms_error_conf_file' for specifying a different empirical
+        model]
 
     -r, --num_reads 
        <optional number of reads to simulate with MetaSim; default is
@@ -234,29 +249,69 @@ Options:
     -p, --mean_read_length 
        <optional mean length of read to simulate with MetaSim; default
         is $mean_read_len_default (please see simPipeVars.pm, where
-        this is set); Note that it may make sense in the simulations
-        to control the read length via the clone length, i.e., to set
-        the read length to be very large and the clone length to be
-        what you want the read length to be.>
+        this is set); passed to MetaSim. Note: it may make sense in
+        the simulations to control the read length via the clone
+        length, i.e., to set the read length to be very large and the
+        clone length to be what you want the read length to be>
 
     -u, --stddev_read_length 
        <optional standard deviation of read length distribution;
         default is $stddev_read_len_default (please see
-        simPipeVars.pm, where this is set)>
+        simPipeVars.pm, where this is set); passed to MetaSim>
 
     --cl, --mean_clone_length
        <optional mean length of clone fragment for simulation with
         MetaSim; default is $mean_clone_len_default (please see
-        simPipeVars.pm, where this is set); Note that it may make
-        sense in the simulations to control the read length via the
-        clone length, i.e., to set the read length to be very large
-        and the clone length to be what you want the read length to
-        be.>
+        simPipeVars.pm, where this is set); passed to MetaSim. Note:
+        it may make sense in the simulations to control the read
+        length via the clone length, i.e., to set the read length to
+        be very large and the clone length to be what you want the
+        read length to be>
 
     --cs, --stddev_clone_len
        <optional standard/max deviation of clone fragment length
         distribution; default is $stddev_clone_len_default (please see
-        simPipeVars.pm, where this is set);
+        simPipeVars.pm, where this is set); passed to MetaSim>
+
+    --sanger_err_start
+       <value is the initial error rate for the MetaSim Sanger error
+        model; passed to MetaSim; default is 0>
+
+    --sanger_err_end
+       <value the final error rate for the MetaSim Sanger error
+        model; passed to MetaSim; default is 0>
+
+    --sanger_deletions
+       <value is the relative deletion rate for the MetaSim Sanger
+        error model; passed to MetaSim; default is 0>
+
+    --sanger_insertions
+       <value is the relative insertion rate for the MetaSim Sanger
+        error model; passed to MetaSim; default is 0>
+
+    --sanger_mate_probability 
+       <value is the probability of paired reads for the MetaSim
+        Sanger error model; passed to MetaSim; default is 0>
+
+   --ms_error_conf_file
+       <a file that can be used with MetaSim's Empirical sequencing
+       model to simulate reads with various kinds of sequencing error;
+       the default sequencing model is Sanger without any error>
+
+   --mn, --no_delete_metasim_db
+       [no value taken; if set, the metasim database is not deleted
+        after reads have been generated; by default, the database is
+        deleted because it takes space to store and, if a single
+        database is stored for multiple runs, different calls to
+        metasim may interfere with each other]
+
+   --mg, --global_metasim_db
+       [no value taken, if set, the metasim is called from the
+        calling directory rather than from the output directory (and
+        hence, a single database is stored in the calling directory
+        rather than one in each output directory, for multiple runs);
+        by default, metasim is run in the output directory so that
+        different calls to metasim do not interfere with each other]
 
     -f, --reads_file 
        <(alternate to option '-s') fasta file of metagenomic reads to
@@ -282,34 +337,6 @@ Options:
        via AMPHORA), which means one should be careful about how many
        reads are initially created, since the BLAST step and AMPHORA
        scan are slow>
-
-   --ms_error_conf_file
-       <a file that can be used with MetaSim's Empirical sequencing
-       model to simulate reads with various kinds of sequencing error;
-       the default sequencing model is Sanger without any error>
-
-   --mn, --no_delete_metasim_db
-       [no value taken; if set, the metasim database is not deleted
-        after reads have been generated; by default, the database is
-        deleted because it takes space to store and, if a single
-        database is stored for multiple runs, different calls to
-        metasim may interfere with each other]
-
-   --mg, --global_metasim_db
-       [no value taken, if set, the metasim is called from the
-        calling directory rather than from the output directory (and
-        hence, a single database is stored in the calling directory
-        rather than one in each output directory, for multiple runs);
-        by default, metasim is run in the output directory so that
-        different calls to metasim do not interfere with each other]
-
-   --metasim_path 
-       <optional string giving the location of the metasim
-        installation directory or wherever MetaSim writes its
-        error.log file by default; used to record the information
-        MetaSim outputs about each simulation run; default, set in
-        simPipeVars.pm, is '/usr/local/metasim'; the functionality is
-        only available if the path exists>
 
     -d, --blastdb 
        <the base name (including the path) of an existing blast
@@ -382,6 +409,11 @@ Options:
         how the alignment method is decided; this option is ignored if
         option '-a' is not also selected]
 
+    --save_align_log
+       [no value taken; if set, then a log of the alignment process is
+        saved; this can be useful when aligning with AMPHORA; default
+        is not to save the file]
+
     --hmmer2_path
        <the path to HMMER 2 binaries, in particular, hmmpfam; used
         only with AMPHORA; default set in simPipeVars.pm; see also
@@ -426,15 +458,16 @@ my $error_msg = qq{
 
 my ($help_flag, $add_seqs_flag, $sim_flag, $blast_flag, $align_flag,
     $align_src_flag, $noscan_flag, $save_blast_out_flag, $log_flag,
-    $log_fh, $log_file, $metasim_log, 
-    $metasim_error_conf_file, $gene_symbol, $amphora_path_nondefault,
-    $alt_gene_symbol, $num_seqs, $num_ref_seqs, $type, $cur_dir,
-    $out_dir, $full_path_cur_dir, $basename, $fullpath_basename,
-    $use_refdb, $ref_db_file_basename, $ref_db_file_pep,
-    $ref_db_file_dna, $alt_seqs_basename, $sample_file_basename,
-    $sample_file_dna, $sample_file_dna_padded,$sample_file_pep,
-    $pad_size,$src_seqs_dna, $sample_final_src_seqs,
-    $final_num_src_seqs, $tax_profile_ratio,
+    $log_fh, $log_file, $metasim_log, $sanger_err_start,
+    $sanger_err_end, $sanger_insertions, $sanger_deletions,
+    $sanger_mate_probability, $metasim_error_conf_file,
+    $gene_symbol, $amphora_path_nondefault, $alt_gene_symbol,
+    $num_seqs, $num_ref_seqs, $type, $cur_dir, $out_dir,
+    $full_path_cur_dir, $basename, $fullpath_basename, $use_refdb,
+    $ref_db_file_basename, $ref_db_file_pep, $ref_db_file_dna,
+    $alt_seqs_basename, $sample_file_basename, $sample_file_dna,
+    $sample_file_dna_padded,$sample_file_pep, $pad_size,$src_seqs_dna,
+    $sample_final_src_seqs, $final_num_src_seqs, $tax_profile_ratio,
     $tax_profile_max_abundance, $metasim_profile, $metasim_reads_file,
     $dna_reads_file, $thr_metasim_reads_file, $scanned_pep_reads_file,
     $filtered_sim_reads_file, $reads_to_align, $num_reads,
@@ -443,7 +476,7 @@ my ($help_flag, $add_seqs_flag, $sim_flag, $blast_flag, $align_flag,
     $mean_clone_len, $stddev_clone_len, $num_blastdb_hits,
     $blast_expect_cutoff, $blastdb_name, $blastdb_ne_flag,
     $frames_file, $trans_file, $tr_reads_file, $hmm_profile, $model,
-    $len_threshold, @args);
+    $len_threshold, $align_log_flag, @args);
 
 ####### SET-UP DEFAULT VALUES FOR SOME VARIABLES
 
@@ -453,10 +486,6 @@ $cur_dir = File::Spec->curdir();
 $out_dir = $cur_dir;
 $full_path_cur_dir = File::Spec->rel2abs($cur_dir);
 $num_reads=$num_reads_default; 
-$mean_read_len = $mean_read_len_default;
-$stddev_read_len = $stddev_read_len_default;
-$mean_clone_len = $mean_clone_len_default;
-$stddev_clone_len = $stddev_clone_len_default;
 $global_metasim_db_flag = 0;
 $no_del_metasim_db_flag = 0;
 $num_ref_seqs = -1;  #ignore ref db when sampling, i.e., sample from any of the sequences
@@ -465,6 +494,13 @@ $tax_profile_ratio = 1;
 $tax_profile_max_abundance = INT_MAX;
 $num_filtered_reads = 0;
 $num_blastdb_hits = $num_blastdb_hits_default;
+$sanger_mate_probability = $sanger_mate_prob_default;
+$sanger_insertions = $sanger_insert_default;
+$sanger_deletions = $sanger_delete_default;
+$sanger_err_start = $sanger_err_start_default;
+$sanger_err_end = $sanger_err_end_default;
+$align_log_flag = 0;
+
 ####### GET OPTION SETTINGS
 # using single letters as alternate optional names so that this version is compatible with previous versions
 GetOptions(
@@ -491,6 +527,11 @@ GetOptions(
     'stddev_read_len|u:i' => \$stddev_read_len,
     'mean_clone_len|cl:i' => \$mean_clone_len,
     'stddev_clone_len|cs:i' => \$stddev_clone_len,
+    'sanger_err_start:f' => \$sanger_err_start,
+    'sanger_err_end:f'=> \$sanger_err_end,
+    'sanger_insertions:f' => \$sanger_insertions,
+    'sanger_deletions:f' => \$sanger_deletions,
+    'sanger_mate_probability:f' => \$sanger_mate_probability,
     'reads_file|f:s' =>	\$metasim_reads_file,
     'global_metasim_db|mg' => \$global_metasim_db_flag,
     'no_delete_metasim_db|mn' => \$no_del_metasim_db_flag,
@@ -505,6 +546,7 @@ GetOptions(
     'tr_reads_file|l:s' => \$tr_reads_file,
     'align|a' => \$align_flag,
     'align_source' => \$align_src_flag,
+    'save_align_log' => \$align_log_flag,
     'hmmer2_path:s' => \$hmmer2_path,
     'drop_len:i' => \$len_threshold,
     'model:s' => \$model,
@@ -538,10 +580,6 @@ if ($log_flag) {
     $log_fh = \*LOG;
 } else { $log_fh = \*STDOUT; }
 
-if (! (-d $metasim_path)) {
-    print $log_fh "Metasim installation path $metasim_path not found; ignoring.\n";
-}
-
 $metasim_log = $fullpath_basename.'-'.$metasim_log_filename;
 
 if (! defined($type)) {
@@ -571,16 +609,18 @@ if (defined ($ref_db_file_basename) ) {
     $ref_db_file_dna = $ref_db_file_basename.$dna_fasta_ext;
 } 
 
-if ( (($type eq PROTEIN) and (! (-e $ref_db_file_pep))) 
-     or (($type ne PROTEIN) and (! (-e $ref_db_file_dna))) ) {
-    print $log_fh "Cannot find reference database file ". 
-	( ($type eq PROTEIN) ? $ref_db_file_pep : $ref_db_file_dna ). "!\n". 
-	"Trying to run the pipeline without it.\n";
-    $use_refdb=0;
-} else {
+if ( ( ($type eq PROTEIN) and defined ($ref_db_file_pep) and ((-e $ref_db_file_pep)) )
+     or ( ($type ne PROTEIN) and defined ($ref_db_file_dna) and ((-e $ref_db_file_dna)) ) ){
     $use_refdb=1;
+} else {
+    if (defined ($ref_db_file_basename)) {
+	print $log_fh "Cannot find reference database file ". 
+	    ( ($type eq PROTEIN) ? $ref_db_file_pep : $ref_db_file_dna ). "!\n". 
+	    "Trying to run the pipeline without it.\n";
+    }
+    $use_refdb=0;
 }
-    
+
 ####### LOOK FOR PRE-EXISTING BLAST DATABASE
 my @blast_db_exts = ($type eq PROTEIN) ? @blast_db_pep_exts : @blast_db_na_exts;
 $blastdb_ne_flag=0;    
@@ -688,6 +728,9 @@ if (defined ($num_seqs) and ($num_seqs < 0)) {
 }
 
 ####### GENERATE SIMULATED READS USING METASIM
+if (($sim_flag) and !(-d $metasim_path)) {
+    print $log_fh "Note: Cannot find metasim installation directory here $metasim_path for error log copy. Ignoring.\n";
+}
 
 if ( (defined ($sample_file_dna) and $add_seqs_flag) or ($num_seqs and $sim_flag) ) {
     # pad sequences
@@ -747,7 +790,10 @@ if ($sim_flag) {
 	push(@args, '-e', $metasim_error_conf_file);
     } else {
 	push(@args, '-l', $mean_read_len, '-s', $stddev_read_len, 
-	     '-c', $mean_clone_len, '-p', $stddev_clone_len);
+	     '-c', $mean_clone_len, '-p', $stddev_clone_len, 
+	     '--mate_prob', $sanger_mate_probability,
+	     '--err_insert', $sanger_insertions, '--err_delete', $sanger_deletions,
+	     '--err_start', $sanger_err_start, '-err_end', $sanger_err_end);
     }
     unless( $no_del_metasim_db_flag) {
 	# default behavior: metasim database will be deleted after reads are generated
@@ -903,10 +949,10 @@ if (defined ($tr_reads_file) and (! defined ($trans_file)) ){
     $trans_file = $tr_reads_file;
 }	    
 if ( (!$noscan_flag) and (defined($gene_symbol)) and ($type eq PROTEIN) ) {
-    unless (-e $trans_file) {
-	die "Cannot find file $trans_file containing reads to be scanned.\n";
+    unless (defined ($trans_file) and (-e $trans_file)) {
+	die "Cannot find file containing reads to be scanned.\n";
     }
-    print $log_fh "Scanning peptide reads with modified AMPHORA code MarkerScannerAlt ".
+    print $log_fh "Scanning peptide reads with modified AMPHORA code markerScannerAlt ".
 	"\n  for recognizable $gene_symbol fragments; this may take some time.\n"; 	  
     @args = ('-g', $gene_symbol, '-r', $trans_file, '-d', $out_dir, '-a', $amphora_path, '-h', $hmmer2_path);
     $scanned_pep_reads_file = run_markerScannerAlt(@args);
@@ -914,7 +960,7 @@ if ( (!$noscan_flag) and (defined($gene_symbol)) and ($type eq PROTEIN) ) {
 	die "Error scanning reads!  Expecting file $scanned_pep_reads_file to have been written but cannot find it.\n";
     }
     my $count = count_seqs($scanned_pep_reads_file);
-    print $log_fh "$count sequences picked up by modified AMPHORA code MarkerScannerAlt\n".
+    print $log_fh "$count sequences picked up by modified AMPHORA code markerScannerAlt\n".
 	"  as (possibly partial) $gene_symbol sequences.\n";
     print $log_fh "  Results of scan written to ". File::Spec->abs2rel($scanned_pep_reads_file).".\n";    
     $reads_to_align = $scanned_pep_reads_file;
@@ -951,8 +997,8 @@ if ( $num_seqs or defined($sample_file_dna) ) {
 ####### ALIGN READS, POSSIBLY WITH REFERENCE DATABASE SEQUENCES
 
 if ($align_flag) {
-    unless (-e $reads_to_align) {
-	die "Cannot find file $reads_to_align containing reads to be aligned.\n";
+    unless (defined($reads_to_align) and (-e $reads_to_align) ){
+	die "Cannot find file containing reads to be aligned.\n";
     }
     my $aligner;
     if ($type ne PROTEIN) {
@@ -1011,8 +1057,12 @@ if ($align_flag) {
 	die "Error in alignment process!  Expecting file $alignment to have been created, but cannot find it.\n";
     }
     if (-e $align_log) {
-	print $log_fh "Information about or errors in alignment process written to log file ".
-	    "\n  ".File::Spec->abs2rel( $align_log ).".\n";
+	if ($align_log_flag) {
+	    print $log_fh "Information about or errors in alignment process written to log file ".
+		"\n  ".File::Spec->abs2rel( $align_log ).".\n";
+	} else {
+	    unlink($align_log);
+	}
     }
     print $log_fh "Reads and reference sequences have been aligned to profile;".
 	(($aligner eq AMPHORA) ? ",\n  alignment has been trimmed;" : '').
@@ -1042,9 +1092,13 @@ if ($align_flag) {
 	    die "Error in alignment process!  Expecting file $alignment to have been created, but cannot find it.\n";
 	}
 	if (-e $align_log) {
-	    print $log_fh "Any errors or warnings in alignment process\n".
-		"  written to log file ".
-		File::Spec->abs2rel( $align_log ).".\n";
+	    if ($align_log_flag) {
+		print $log_fh "Any errors or warnings in alignment process\n".
+		    "  written to log file ".
+		    File::Spec->abs2rel( $align_log ).".\n";
+	    } else {
+		unlink($align_log);
+	    }
 	}
 	print $log_fh "Full-length sequences and reference sequences have been aligned".
 	    (($aligner eq AMPHORA) ? ",\n  and alignment has been trimmed\n" : "\n").

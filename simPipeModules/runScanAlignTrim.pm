@@ -244,6 +244,9 @@ sub run_alignTrim (%) {
 	chdir ($tempdir) or die "Cannot move to temporary working directory $tempdir to perform alignment: $!\n";
 	my $temp_logfile = 'temp.log';
 	my $amphora_align_script = File::Spec->catfile($amphora_scripts_path, 'MarkerAlignTrim.pl');
+	if (! (-e $amphora_align_script)) {
+	    die "Cannot find AMPHORA script MarkerAlignTrim.pl in directory $amphora_scripts_path!\n";
+	}
 	$cmd='perl '.$amphora_align_script.' -Trim '. ($partial_flag ? '-Partial ' : ''). '2> '. $temp_logfile;
 	eval {
 	    system ($cmd);

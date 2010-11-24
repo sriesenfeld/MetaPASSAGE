@@ -19,18 +19,34 @@ package retrieveSeqs;
 
 use strict;
 # use warnings;
-use warnings FATAL => qw( all );
+use warnings FATAL => qw( all );  # to keep retrieval from going nuts
+use Getopt::Std;
 
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(retrieve_seqs extract_gene_ids );
-
-use DBI;
-use Bio::DB::GenBank;
-use Bio::DB::RefSeq;
-use Bio::Factory::FTLocationFactory;
-
-use Getopt::Std;
+my $bioperl_missing=0;                                                                                            
+eval {
+    require Bio::DB::GenBank;
+    Bio::DB::GenBank->import();
+};
+if ($@) {
+    $bioperl_missing=1;
+}
+eval {
+    require Bio::DB::RefSeq;
+    Bio::DB::RefSeq->import();
+};
+if ($@) {
+    $bioperl_missing=1;
+}
+eval {    
+    require Bio::Factory::FTLocationFactory;
+    Bio::Factory::FTLocationFactory->import();
+};
+if ($@) {
+    $bioperl_missing=1;
+}
 
 =head2 retrieve_seqs
 
@@ -61,6 +77,9 @@ use Getopt::Std;
 =cut
 
 sub retrieve_seqs($$;$) {
+    if ($bioperl_missing) {
+	die "Cannot do sequence retrieval without BioPerl installed!\n";
+    }
     my ($infile, $outfile, $append) = @_;
     my $max_calls = 30;
     my $max_fails = 45;

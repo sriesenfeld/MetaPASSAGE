@@ -34,31 +34,46 @@
 # Riesenfeld: making this into a package so it can be loaded with
 # other modules in simPipeModules
 
-## FIX: Finish bug-checking this.
-
 package AMPHORA_MarkerScannerAlt;
+
+use strict;
+# Riesenfeld: Added these use lines, for use with MetaPASSAGE.pl
+use warnings;
+use lib 'simPipeModules';
+use simPipeVars qw(:amphora);
 
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(markerScannerAlt);
 
-use strict;
-# Riesenfeld: added below
-use warnings;
-
-use Bio::SeqIO;
-use Bio::SearchIO;
-
-# Riesenfeld: Added these use lines, for use with MetaPASSAGE.pl
-use warnings;
-use lib 'simPipeModules';
-use simPipeVars qw(:amphora);
+# Riesenfeld: Added in case BioPerl is not installed
+my $bioperl_missing=0;
+eval {
+    require Bio::SeqIO;
+    Bio::SecIO->import();
+};
+if ($@) {
+    $bioperl_missing=1;
+}
+eval {
+    require Bio::SearchIO;   
+    Bio::SearchIO->import();
+};
+if ($@) {
+    $bioperl_missing=1;
+    warn("Note: AMPHORA functionality is not available without installation of BioPerl.\n");
+}
 
 my (%markerlist, %seq, %Hmmlength) = ();
 my $AMPHORA_home = $amphora_path;
 my $in_file;
 
 sub markerScannerAlt($;$$) {
+
+    # Riesenfeld: Check for BioPerl:
+    if ($bioperl_missing) {
+	die "AMPHORA_MarkerScannerAlt: Cannot use AMPHORA functionality without installing BioPerl!\n";
+    }
 
     # Riesenfeld: Slightly changed input message and added input paths
     $in_file = shift(@_);    
