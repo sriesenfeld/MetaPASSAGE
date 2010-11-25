@@ -44,32 +44,33 @@ Directory: /examples/example1_alt_rpoB
 Contains the following files:
 
 
-example1_alt_refdb_create.pl : Perl script example for creating a
+- example1_alt_refdb_create.pl : Perl script example for creating a
    reference database with a gene family, using a tree for which
    taxonomic information is available
 
-example1_alt_refdb_create.out : The output redirected from stdout from
+- example1_alt_refdb_create.out : The output redirected from stdout from
    runn1ng example1_alt_refdb_create.pl, which illustrates the process
    of refDB creation in this instance.
 
 ***
-example1_alt_runsims.pl : The main Perl script for this example. It
+- example1_alt_runsims.pl : The main Perl script for this example. It
    creates a few simulations from the rpoB protein family and
    demonstrates some of the capabilities of the pipeline. See the Perl
    script for more details.
 ***
 
-example1_alt_runsims.out : The output redirected from stdout from
+- example1_alt_runsims.out : The output redirected from stdout from
    running example1_alt_runsims.pl, which illustrates the steps used in
    this instance of the pipeline.
 
 ---------
-Running the example1_alt_refdb_create.pl script creates the following
-  files, examples of which are in the
-  example1_alt_sample_output directory:
+Directory: example1_alt_sample_output
+Contains the following files, which are examples of output files
+  created by running the scripts above.
 
+Created by running the example1_alt_refdb_create.pl script:
 
-RefDB_rpoB_200.pep, RefDB_rpoB_200.fna : The first file is a fasta
+- RefDB_rpoB_200.pep, RefDB_rpoB_200.fna : The first file is a fasta
    file containing a simulated "reference database" of 200 rpoB
    sequences, and the second file contains the corresponding DNA
    sequences; both are created by example1_alt_refdb_create.pl. A
@@ -77,21 +78,17 @@ RefDB_rpoB_200.pep, RefDB_rpoB_200.fna : The first file is a fasta
    diversity according to the Genome tree. The result were selected
    uniformly at random from the rest of the rpoB sequences.
 
-RefDB_rpoB_20.pep, RefDB_rpoB_20.fna : Analogous to the above
+- RefDB_rpoB_20.pep, RefDB_rpoB_20.fna : Analogous to the above
    reference database, but with 20 instead of 200 sequences.
 
----------
 
-Running the example1_alt_runsims.pl script creates, among other output
-   files, the following alignment files, examples of which are in the
-   example1_alt_sample_output directory: (Note that the alignment
-   files are each placed in the appropriate simulation subdirectory
-   but examples have been copied from the subdirectories to
-   example1_alt_sample_output; also the top-level directories have
-   been tar'd and zipped to compress the size.)
+Created by running the example1_alt_runsims.pl script. (Note: Original
+   alignment files are each located in the appropriate simulation
+   subdirectory but they have have been copied from the subdirectories
+   to example1_alt_sample_output; the top-level directories have been
+   tar'd and zipped to compress the size.)
 
-
-sim<X>_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln (where
+- sim<X>_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln (where
    <X>, which labels the simulation trial, is either 1 or 2) : These
    are the fasta alignments from both trials of the translated reads
    and the reference database sequences in RefDB_rpoB_200.pep. The
@@ -100,11 +97,11 @@ sim<X>_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln (where
    file name captures the main steps the pipeline took to create the
    file.
 
-sim<X>_rpoB_RefDB_20_<X>-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln : The
-  analogous files to those above using the reference database
-  RefDB_rpoB_20.pep.
+- sim<X>_rpoB_RefDB_20_<X>-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln : The
+   analogous files to those above using the reference database
+   RefDB_rpoB_20.pep.
 
-sim<X>_rpoB_RefDB_200-src-final<Y>-RefDB.aln (where <X>, which labels
+- sim<X>_rpoB_RefDB_200-src-final<Y>-RefDB.aln (where <X>, which labels
    the simulation trial, is either 1 or 2, and <Y> is some number
    close to 200 giving the number of distinct full-length sequences in
    the corresponding file) : Sequences in this file are either in the
@@ -112,19 +109,18 @@ sim<X>_rpoB_RefDB_200-src-final<Y>-RefDB.aln (where <X>, which labels
    corresponds to the same simulation trial. This is a fasta alignment
    of full-length gene sequences.
 
-sim<X>_rpoB_RefDB_20_<X>-src-final<Y>-RefDB.aln : The analogous files
+- sim<X>_rpoB_RefDB_20_<X>-src-final<Y>-RefDB.aln : The analogous files
    to those above, using the reference database RefDB_rpoB_20.pep
 
----------
+
 Output directories:
 
-
-sims_rpoB_RefDB_200.tgz : An actual simulation produces lots of files
+- sims_rpoB_RefDB_200.tgz : An actual simulation produces lots of files
    which may or may not interest the user. This tar'd and zip'd file
    contains contains all files produced for every simulation involving
    the reference database RefDB_rpoB_200. A description of what is
    contained in each of these files can be found in the MetaPASSAGE
    README.
 
-sims_rpoB_RefDB_20.tgz : The analogous file to that above, using the
+- sims_rpoB_RefDB_20.tgz : The analogous file to that above, using the
    reference database RefDB_rpoB_20.pep.
