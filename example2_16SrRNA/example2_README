@@ -99,3 +99,7 @@ Output directories:
    simulations involving the uniform distribution of relative
    abundances.
 
+
+Note: BLAST databases (e.g., RefDB_16SrRNA_200.nhr,
+  RefDB_16SrRNA_200.nin, RefDB_16SrRNA_200.nsq) are not included in
+  the sample output but will be created by running the script.

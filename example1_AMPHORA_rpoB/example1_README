@@ -112,3 +112,8 @@ Output directories:
 
 - sims_rpoB_RefDB_20.tgz : The analogous file to that above, using the
    reference database RefDB_rpoB_20.pep.
+
+
+Note: BLAST databases (e.g., RefDB_rpoB_200.phr, RefDB_rpoB_200.pin,
+  RefDB_rpoB_200.psq) are not included in the sample output but will
+  be created by running the script.
