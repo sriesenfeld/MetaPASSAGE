@@ -2,7 +2,7 @@
 # S.J. Riesenfeld
 # Updated: Oct 2010
 
-uexse strict;
+use strict;
 use warnings;
 use File::Spec;
 
