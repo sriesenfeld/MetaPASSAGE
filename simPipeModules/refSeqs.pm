@@ -285,21 +285,18 @@ sub make_reference_db(@) {
     if ($append_flag) {
 	die "make_reference_db: The append option is currently not implemented!\n";
     }
-    if (! $dir) {       
+    if (! defined($dir)) {       
 	$dir = $amphora_ref_seq_path;
     }
     if (defined($gene_symbol) and !(-d $dir)) {
 	die "Cannot find directory $dir containing the AMPHORA Reference Sequences.\n"; 
     }        
     if (!defined($file_seqs_basename)) {
-	$file_seqs_basename = $gene_symbol;
+	$file_seqs_basename = File::Spec->catfile($dir, $gene_symbol);
     }
     $seqs_file_pep = $file_seqs_basename.$pep_fasta_ext;
     $seqs_file_dna = $file_seqs_basename.$dna_fasta_ext;
-    if (!defined($file_seqs_basename)) {
-	$seqs_file_pep = File::Spec->catfile($dir, $seqs_file_pep);    
-	$seqs_file_dna = File::Spec->catfile($dir, $seqs_file_dna);
-    }    
+
     $outfile_pep = $refdb_basename . $pep_fasta_ext;
     $outfile_dna = $refdb_basename . $dna_fasta_ext;
     
@@ -339,11 +336,11 @@ sub make_reference_db(@) {
     # my @cur_ref_headers;
     my @seq_headers;
     if (-e $seqs_file_dna) {
-	@seq_headers = get_sequence_headers($seqs_file_dna);
 	print "Getting sequence headers from file $seqs_file_dna.\n";
+	@seq_headers = get_sequence_headers($seqs_file_dna);
     } else {
-	@seq_headers = get_sequence_headers ($seqs_file_pep);
 	print "Getting sequence headers from file $seqs_file_pep.\n";
+	@seq_headers = get_sequence_headers ($seqs_file_pep);
     } 
     my ($chosen_headers_ar, $rem_headers_ar, $spots_left);
     if ($maxpd_num) {

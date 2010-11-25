@@ -169,6 +169,10 @@ if ($opts{'r'} and !defined ($gene_symbol)) {
 # if (!$opts{'r'} and $opts{'a'} and ($opts{'m'}>0)) {
 #    die "The reference DB files cannot be formed by appending to input ref DB files if option \'m\' is set to a positive number!\n";
 # }
+if (defined ($opts{'d'})) {
+    define_amphora_paths(File::Spec->rel2abs($opts{'d'}));
+}
+
 if (!$opts{'r'}) {
     if (!$opts{'n'}) {
 	$total_num_seqs = $ref_db_default_size;
@@ -207,9 +211,6 @@ if (!$opts{'r'}) {
     if (!$maxpd_compute_num) {
 	$maxpd_compute_num = $maxpd_default_num;
     }
-}
-if ($opts{'d'}) {
-    define_amphora_paths($opts{'d'});
 }
 $dir = $amphora_ref_seq_path;
 
