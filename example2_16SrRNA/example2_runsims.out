@@ -1,0 +1,141 @@
+
+Performing simulation 1 of 2 with ratio set to 1.5.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_16S_ratio_1p5/sim1_16S_ratio_1p5  --out_basename sim1_16S_ratio_1p5  --refdb_basename RefDB_16SrRNA_200 --num_seqs 200  --num_ref_seqs 0 --sim  --tax_profile_ratio 1.5 --num_reads 1000  --metasim_path /home/sriesenfeld/local/metasim/ --blast --type RNA2DNA  --seqs_file_basename 16SrRNA --align --model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod
+Sampling 200 full-length sequences (0 reference sequences).
+Sampling 200 sequences from the 287 available sequences outside the Reference Database.
+DNA sequences have been sampled and written to sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd.fna
+Adding sequences from sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd.mprf.
+Running MetaSim to create 1000 reads.
+31 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-metasim.log
+Simulated reads written to file sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 14 reads shorter than 25 base pairs;
+  the rest have been written to sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp-thr.fna.
+Cannot find at least one of the blast database files with base name RefDB_16SrRNA_200.
+  Building a new blast database.
+Formatting blast database RefDB_16SrRNA_200 from RefDB_16SrRNA_200.fna.
+Running blastn on reads to figure out how to orient them 
+  (i.e. if they should be reverse-complemented),
+  and then writing correctly oriented reads to file -- this may take some time.
+Orientation data written in file sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp-thr.orient.
+Reads correctly oriented
+  and written in file sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp-thr-or.fna.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+955 reads written to sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp-thr-or-955r.fna.
+17 full-length sequences corresponding to these reads written to file sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-final17.fna
+Aligning the reads in sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp-thr-or-955r.fna
+  and reference sequences in RefDB_16SrRNA_200.fna 
+  to input model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod, using cmalign;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;
+  alignment written to sims_16S_ratio_1p5/sim1_16S_ratio_1p5/sim1_16S_ratio_1p5-src-pd-reads-rp-thr-or-955r-RefDB.sto.
+
+
+Performing simulation 2 of 2 with ratio set to 1.5.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_16S_ratio_1p5/sim2_16S_ratio_1p5  --out_basename sim2_16S_ratio_1p5  --refdb_basename RefDB_16SrRNA_200 --num_seqs 200  --num_ref_seqs 0 --sim  --tax_profile_ratio 1.5 --num_reads 1000  --metasim_path /home/sriesenfeld/local/metasim/ --blast --type RNA2DNA  --seqs_file_basename 16SrRNA --align --model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod
+Sampling 200 full-length sequences (0 reference sequences).
+Sampling 200 sequences from the 287 available sequences outside the Reference Database.
+DNA sequences have been sampled and written to sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd.fna
+Adding sequences from sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd.mprf.
+Running MetaSim to create 1000 reads.
+39 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-metasim.log
+Simulated reads written to file sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 16 reads shorter than 25 base pairs;
+  the rest have been written to sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp-thr.fna.
+Running blastn on reads to figure out how to orient them 
+  (i.e. if they should be reverse-complemented),
+  and then writing correctly oriented reads to file -- this may take some time.
+Orientation data written in file sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp-thr.orient.
+Reads correctly oriented
+  and written in file sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp-thr-or.fna.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+945 reads written to sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp-thr-or-945r.fna.
+14 full-length sequences corresponding to these reads written to file sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-final14.fna
+Aligning the reads in sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp-thr-or-945r.fna
+  and reference sequences in RefDB_16SrRNA_200.fna 
+  to input model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod, using cmalign;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;
+  alignment written to sims_16S_ratio_1p5/sim2_16S_ratio_1p5/sim2_16S_ratio_1p5-src-pd-reads-rp-thr-or-945r-RefDB.sto.
+
+
+Performing simulation 1 of 2 with ratio set to 1.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_16S_ratio_1/sim1_16S_ratio_1  --out_basename sim1_16S_ratio_1  --refdb_basename RefDB_16SrRNA_200 --num_seqs 200  --num_ref_seqs 0 --sim  --tax_profile_ratio 1 --num_reads 1000  --metasim_path /home/sriesenfeld/local/metasim/ --blast --type RNA2DNA  --seqs_file_basename 16SrRNA --align --model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod
+Sampling 200 full-length sequences (0 reference sequences).
+Sampling 200 sequences from the 287 available sequences outside the Reference Database.
+DNA sequences have been sampled and written to sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd.fna
+Adding sequences from sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd.mprf.
+Running MetaSim to create 1000 reads.
+38 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-metasim.log
+Simulated reads written to file sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 15 reads shorter than 25 base pairs;
+  the rest have been written to sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp-thr.fna.
+Running blastn on reads to figure out how to orient them 
+  (i.e. if they should be reverse-complemented),
+  and then writing correctly oriented reads to file -- this may take some time.
+Orientation data written in file sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp-thr.orient.
+Reads correctly oriented
+  and written in file sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp-thr-or.fna.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+947 reads written to sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp-thr-or-947r.fna.
+189 full-length sequences corresponding to these reads written to file sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-final189.fna
+Aligning the reads in sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp-thr-or-947r.fna
+  and reference sequences in RefDB_16SrRNA_200.fna 
+  to input model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod, using cmalign;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;
+  alignment written to sims_16S_ratio_1/sim1_16S_ratio_1/sim1_16S_ratio_1-src-pd-reads-rp-thr-or-947r-RefDB.sto.
+
+
+Performing simulation 2 of 2 with ratio set to 1.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_16S_ratio_1/sim2_16S_ratio_1  --out_basename sim2_16S_ratio_1  --refdb_basename RefDB_16SrRNA_200 --num_seqs 200  --num_ref_seqs 0 --sim  --tax_profile_ratio 1 --num_reads 1000  --metasim_path /home/sriesenfeld/local/metasim/ --blast --type RNA2DNA  --seqs_file_basename 16SrRNA --align --model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod
+Sampling 200 full-length sequences (0 reference sequences).
+Sampling 200 sequences from the 287 available sequences outside the Reference Database.
+DNA sequences have been sampled and written to sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd.fna
+Adding sequences from sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd.mprf.
+Running MetaSim to create 1000 reads.
+40 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-metasim.log
+Simulated reads written to file sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 22 reads shorter than 25 base pairs;
+  the rest have been written to sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp-thr.fna.
+Running blastn on reads to figure out how to orient them 
+  (i.e. if they should be reverse-complemented),
+  and then writing correctly oriented reads to file -- this may take some time.
+Orientation data written in file sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp-thr.orient.
+Reads correctly oriented
+  and written in file sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp-thr-or.fna.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+938 reads written to sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp-thr-or-938r.fna.
+192 full-length sequences corresponding to these reads written to file sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-final192.fna
+Aligning the reads in sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp-thr-or-938r.fna
+  and reference sequences in RefDB_16SrRNA_200.fna 
+  to input model /home/sriesenfeld/projects/MetaPASSAGE_wip/16SrRNA_model.mod, using cmalign;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;
+  alignment written to sims_16S_ratio_1/sim2_16S_ratio_1/sim2_16S_ratio_1-src-pd-reads-rp-thr-or-938r-RefDB.sto.
+
+
+All simulations complete.

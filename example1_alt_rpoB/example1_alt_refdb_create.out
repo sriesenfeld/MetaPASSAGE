@@ -1,0 +1,104 @@
+Command given: ../createRefDB.pl -n 20 -b RefDB_rpoB_20 -m 5 -f rpoB -t Genome.tree
+MaxPD list calculated for input tree Genome.tree; results written to file Genome-maxPD.out.
+Getting sequence headers from file rpoB.fna.
+Total of 520 taxa with non-zero maxPD value listed in the file Genome-maxPD.out;
+total of 58 other taxa listed.
+Filtering the 563 given sequence headers now.
+No matches for taxon 'Silicibacter pomeroyi DSS 3'!
+  But matched taxon under alternative name 'Ruegeria pomeroyi DSS-3'.
+More than one (3) sequence header matches for Francisella tularensis subsp holarctica in Genome-maxPD.out:
+  Trying to reduce the number of matches.
+  Succeeded in getting one best match.
+No matches for taxon 'Campylobacter concisus 13826'!
+No matches for taxon 'Acidobacteria bacterium Ellin345'!
+No matches for taxon 'Lactobacillus reuteri F275'!
+No matches for taxon 'Bacillus cereus subsp cytotoxis NVH 391 98'!
+No matches for taxon 'Azoarcus sp EbN1'!
+No matches for taxon 'Campylobacter hominis ATCC BAA 381'!
+No matches for taxon 'Synechococcus sp RCC307'!
+No matches for taxon 'Lactobacillus salivarius subsp salivarius UCC118'!
+  But matched taxon under alternative name 'Lactobacillus salivarius UCC118'.
+No matches for taxon 'Campylobacter jejuni subsp doylei 269 97'!
+No matches for taxon 'Alkalilimnicola ehrlichei MLHE 1'!
+No matches for taxon 'Nocardia farcinica IFM 10152'!
+No matches for taxon 'Rhodococcus sp RHA1'!
+No matches for taxon 'Vibrio fischeri ES114'!
+No matches for taxon 'Agrobacterium tumefaciens str C58'!
+No matches for taxon 'Campylobacter curvus 525 92'!
+No matches for taxon 'Erwinia carotovora subsp atroseptica SCRI1043'!
+No matches for taxon 'Shewanella baltica OS155'!
+No matches for taxon 'Pseudomonas fluorescens PfO 1'!
+No matches for taxon 'Campylobacter jejuni subsp jejuni NCTC 11168'!
+No matches for taxon 'Streptococcus pyogenes MGAS9429'!
+No matches for taxon 'Neisseria meningitidis Z2491'!
+No matches for taxon 'Francisella tularensis subsp holarctica FTA'!
+No matches for taxon 'Burkholderia mallei ATCC 23344'!
+No matches for taxon 'Brucella abortus biovar 1 str 9 941'!
+No matches for taxon 'Escherichia coli K12'!
+No matches for taxon 'Yersinia pestis CO92'!
+More than one (2) sequence header matches for Staphylococcus aureus subsp aureus USA300 in Genome-maxPD.out:
+  Trying to reduce the number of matches.
+  Still multiple matches -- using at most one for the reference database.
+More than one (2) sequence header matches for Bacillus anthracis str Ames in Genome-maxPD.out:
+  Trying to reduce the number of matches.
+  Succeeded in getting one best match.
+A total of 5 sequence headers chosen for reference database via (positive) maxPD.
+A total of 528 remaining headers that contain a taxon from the list in Genome-maxPD.out.
+(20 headers not included in either count because they are one of:  Mycoplasma, Candidatus.)
+A total of 25 taxa had no matching sequence headers.
+15 sequences chosen randomly (without replacement) from remaining sequences.
+DNA reference database written to file RefDB_rpoB_20.fna.
+Peptide reference database written to file RefDB_rpoB_20.pep.
+
+Command given: ../createRefDB.pl -n 200 -b RefDB_rpoB_200 -m 50 -f rpoB -t Genome.tree
+MaxPD list calculated for input tree Genome.tree; results written to file Genome-maxPD.out.
+Getting sequence headers from file rpoB.fna.
+Total of 520 taxa with non-zero maxPD value listed in the file Genome-maxPD.out;
+total of 58 other taxa listed.
+Filtering the 563 given sequence headers now.
+No matches for taxon 'Silicibacter pomeroyi DSS 3'!
+  But matched taxon under alternative name 'Ruegeria pomeroyi DSS-3'.
+More than one (3) sequence header matches for Francisella tularensis subsp holarctica in Genome-maxPD.out:
+  Trying to reduce the number of matches.
+  Succeeded in getting one best match.
+No matches for taxon 'Campylobacter concisus 13826'!
+No matches for taxon 'Acidobacteria bacterium Ellin345'!
+No matches for taxon 'Lactobacillus reuteri F275'!
+No matches for taxon 'Bacillus cereus subsp cytotoxis NVH 391 98'!
+No matches for taxon 'Azoarcus sp EbN1'!
+No matches for taxon 'Campylobacter hominis ATCC BAA 381'!
+No matches for taxon 'Synechococcus sp RCC307'!
+No matches for taxon 'Lactobacillus salivarius subsp salivarius UCC118'!
+  But matched taxon under alternative name 'Lactobacillus salivarius UCC118'.
+No matches for taxon 'Campylobacter jejuni subsp doylei 269 97'!
+No matches for taxon 'Alkalilimnicola ehrlichei MLHE 1'!
+No matches for taxon 'Nocardia farcinica IFM 10152'!
+No matches for taxon 'Rhodococcus sp RHA1'!
+No matches for taxon 'Vibrio fischeri ES114'!
+No matches for taxon 'Agrobacterium tumefaciens str C58'!
+No matches for taxon 'Campylobacter curvus 525 92'!
+No matches for taxon 'Erwinia carotovora subsp atroseptica SCRI1043'!
+No matches for taxon 'Shewanella baltica OS155'!
+No matches for taxon 'Pseudomonas fluorescens PfO 1'!
+No matches for taxon 'Campylobacter jejuni subsp jejuni NCTC 11168'!
+No matches for taxon 'Streptococcus pyogenes MGAS9429'!
+No matches for taxon 'Neisseria meningitidis Z2491'!
+No matches for taxon 'Francisella tularensis subsp holarctica FTA'!
+No matches for taxon 'Burkholderia mallei ATCC 23344'!
+No matches for taxon 'Brucella abortus biovar 1 str 9 941'!
+No matches for taxon 'Escherichia coli K12'!
+No matches for taxon 'Yersinia pestis CO92'!
+More than one (2) sequence header matches for Staphylococcus aureus subsp aureus USA300 in Genome-maxPD.out:
+  Trying to reduce the number of matches.
+  Still multiple matches -- using at most one for the reference database.
+More than one (2) sequence header matches for Bacillus anthracis str Ames in Genome-maxPD.out:
+  Trying to reduce the number of matches.
+  Succeeded in getting one best match.
+A total of 50 sequence headers chosen for reference database via (positive) maxPD.
+A total of 483 remaining headers that contain a taxon from the list in Genome-maxPD.out.
+(20 headers not included in either count because they are one of:  Mycoplasma, Candidatus.)
+A total of 25 taxa had no matching sequence headers.
+150 sequences chosen randomly (without replacement) from remaining sequences.
+DNA reference database written to file RefDB_rpoB_200.fna.
+Peptide reference database written to file RefDB_rpoB_200.pep.
+

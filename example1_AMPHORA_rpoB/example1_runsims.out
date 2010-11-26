@@ -1,0 +1,212 @@
+
+Performing simulation 1 of 2 with 20-sequence Reference DB.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20  --out_basename sim1_rpoB_RefDB_20  --amphora_path /home/sriesenfeld/local/AMPHORA  --gene rpoB  --refdb_basename RefDB_rpoB_20  --num_seqs 100 --sim --ms_error_conf_file errormodel-80bp.mconf  --metasim_path /home/sriesenfeld/local/metasim/ --num_reads 500 --drop_len 10  --blast --target_num_reads -1  --align --align_source  --hmmer2_path /home/Common/opt/Bio/hmmer-2.3.2/bin/
+Assuming default sequence data type of Protein.
+Sampling 100 full-length sequences.
+Peptide sequences sampled from AMPHORA and written to file sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src.pep;
+DNA sequences have been sampled and written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd.fna
+Adding sequences from sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd.mprf.
+Running MetaSim to create 500 reads.
+32 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-metasim.log
+Simulated reads written to file sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 15 reads shorter than 10 base pairs;
+  the rest have been written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr.fna.
+Cannot find at least one of the blast database files with base name RefDB_rpoB_20.
+  Building a new blast database.
+Formatting blast database RefDB_rpoB_20 from RefDB_rpoB_20.pep.
+Running blastx on reads to figure out which frames to translate in,
+  and then translating reads into peptides -- this may take some time.
+Frame data written in file sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr.frames.
+Reads translated (possibly in more than one frame)
+  and written in file sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr.pep.
+Scanning peptide reads with modified AMPHORA code markerScannerAlt 
+  for recognizable rpoB fragments; this may take some time.
+334 sequences picked up by modified AMPHORA code markerScannerAlt
+  as (possibly partial) rpoB sequences.
+  Results of scan written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB.pep.
+Filtering the reads so that there is at most one read per original sampled sequence.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+96 reads written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr.pep.
+96 full-length sequences corresponding to these reads written to file sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-final96.pep
+Aligning the reads in sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr.pep
+  and reference sequences in RefDB_rpoB_20.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming according to the mask;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;,
+  alignment has been trimmed;
+  alignment written to sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln.
+Aligning the full-length sequences in sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-final96.pep
+  that correspond to the final set of reads
+  and reference sequences in RefDB_rpoB_20.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming the alignment according to the mask;
+  this may take some time.
+Full-length sequences and reference sequences have been aligned,
+  and alignment has been trimmed
+  and written to file sims_rpoB_RefDB_20/sim1_rpoB_RefDB_20/sim1_rpoB_RefDB_20-src-final96-RefDB.aln.
+
+
+Performing simulation 2 of 2 with 20-sequence Reference DB.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20  --out_basename sim2_rpoB_RefDB_20  --amphora_path /home/sriesenfeld/local/AMPHORA  --gene rpoB  --refdb_basename RefDB_rpoB_20  --num_seqs 100 --sim --ms_error_conf_file errormodel-80bp.mconf  --metasim_path /home/sriesenfeld/local/metasim/ --num_reads 500 --drop_len 10  --blast --target_num_reads -1  --align --align_source  --hmmer2_path /home/Common/opt/Bio/hmmer-2.3.2/bin/
+Assuming default sequence data type of Protein.
+Sampling 100 full-length sequences.
+Peptide sequences sampled from AMPHORA and written to file sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src.pep;
+DNA sequences have been sampled and written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd.fna
+Adding sequences from sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd.mprf.
+Running MetaSim to create 500 reads.
+27 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-metasim.log
+Simulated reads written to file sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 15 reads shorter than 10 base pairs;
+  the rest have been written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr.fna.
+Running blastx on reads to figure out which frames to translate in,
+  and then translating reads into peptides -- this may take some time.
+Frame data written in file sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr.frames.
+Reads translated (possibly in more than one frame)
+  and written in file sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr.pep.
+Scanning peptide reads with modified AMPHORA code markerScannerAlt 
+  for recognizable rpoB fragments; this may take some time.
+303 sequences picked up by modified AMPHORA code markerScannerAlt
+  as (possibly partial) rpoB sequences.
+  Results of scan written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB.pep.
+Filtering the reads so that there is at most one read per original sampled sequence.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+96 reads written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr.pep.
+96 full-length sequences corresponding to these reads written to file sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-final96.pep
+Aligning the reads in sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr.pep
+  and reference sequences in RefDB_rpoB_20.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming according to the mask;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;,
+  alignment has been trimmed;
+  alignment written to sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln.
+Aligning the full-length sequences in sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-final96.pep
+  that correspond to the final set of reads
+  and reference sequences in RefDB_rpoB_20.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming the alignment according to the mask;
+  this may take some time.
+Full-length sequences and reference sequences have been aligned,
+  and alignment has been trimmed
+  and written to file sims_rpoB_RefDB_20/sim2_rpoB_RefDB_20/sim2_rpoB_RefDB_20-src-final96-RefDB.aln.
+
+
+Performing simulation 1 of 2 with 200-sequence Reference DB.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200  --out_basename sim1_rpoB_RefDB_200  --amphora_path /home/sriesenfeld/local/AMPHORA  --gene rpoB  --refdb_basename RefDB_rpoB_200  --num_seqs 100 --sim --ms_error_conf_file errormodel-80bp.mconf  --metasim_path /home/sriesenfeld/local/metasim/ --num_reads 500 --drop_len 10  --blast --target_num_reads -1  --align --align_source  --hmmer2_path /home/Common/opt/Bio/hmmer-2.3.2/bin/
+Assuming default sequence data type of Protein.
+Sampling 100 full-length sequences.
+Peptide sequences sampled from AMPHORA and written to file sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src.pep;
+DNA sequences have been sampled and written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd.fna
+Adding sequences from sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd.mprf.
+Running MetaSim to create 500 reads.
+23 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-metasim.log
+Simulated reads written to file sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 14 reads shorter than 10 base pairs;
+  the rest have been written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr.fna.
+Cannot find at least one of the blast database files with base name RefDB_rpoB_200.
+  Building a new blast database.
+Formatting blast database RefDB_rpoB_200 from RefDB_rpoB_200.pep.
+Running blastx on reads to figure out which frames to translate in,
+  and then translating reads into peptides -- this may take some time.
+Frame data written in file sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr.frames.
+Reads translated (possibly in more than one frame)
+  and written in file sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr.pep.
+Scanning peptide reads with modified AMPHORA code markerScannerAlt 
+  for recognizable rpoB fragments; this may take some time.
+349 sequences picked up by modified AMPHORA code markerScannerAlt
+  as (possibly partial) rpoB sequences.
+  Results of scan written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB.pep.
+Filtering the reads so that there is at most one read per original sampled sequence.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+96 reads written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr.pep.
+96 full-length sequences corresponding to these reads written to file sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-final96.pep
+Aligning the reads in sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr.pep
+  and reference sequences in RefDB_rpoB_200.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming according to the mask;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;,
+  alignment has been trimmed;
+  alignment written to sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln.
+Aligning the full-length sequences in sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-final96.pep
+  that correspond to the final set of reads
+  and reference sequences in RefDB_rpoB_200.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming the alignment according to the mask;
+  this may take some time.
+Full-length sequences and reference sequences have been aligned,
+  and alignment has been trimmed
+  and written to file sims_rpoB_RefDB_200/sim1_rpoB_RefDB_200/sim1_rpoB_RefDB_200-src-final96-RefDB.aln.
+
+
+Performing simulation 2 of 2 with 200-sequence Reference DB.
+Command: perl ../MetaPASSAGE.pl --out_dir sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200  --out_basename sim2_rpoB_RefDB_200  --amphora_path /home/sriesenfeld/local/AMPHORA  --gene rpoB  --refdb_basename RefDB_rpoB_200  --num_seqs 100 --sim --ms_error_conf_file errormodel-80bp.mconf  --metasim_path /home/sriesenfeld/local/metasim/ --num_reads 500 --drop_len 10  --blast --target_num_reads -1  --align --align_source  --hmmer2_path /home/Common/opt/Bio/hmmer-2.3.2/bin/
+Assuming default sequence data type of Protein.
+Sampling 100 full-length sequences.
+Peptide sequences sampled from AMPHORA and written to file sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src.pep;
+DNA sequences have been sampled and written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src.fna.
+Full-length sequences padded on each end with 220 'N's were written to file
+  sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd.fna
+Adding sequences from sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src.fna to the MetaSim database.
+Taxonomic profile for MetaSim written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd.mprf.
+Running MetaSim to create 500 reads.
+36 reads dropped from the set of metasim reads due to malformation after padding was removed.
+MetaSim run information written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-metasim.log
+Simulated reads written to file sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp.fna.
+MetaSim database deleted.
+Dropped the 17 reads shorter than 10 base pairs;
+  the rest have been written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr.fna.
+Running blastx on reads to figure out which frames to translate in,
+  and then translating reads into peptides -- this may take some time.
+Frame data written in file sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr.frames.
+Reads translated (possibly in more than one frame)
+  and written in file sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr.pep.
+Scanning peptide reads with modified AMPHORA code markerScannerAlt 
+  for recognizable rpoB fragments; this may take some time.
+324 sequences picked up by modified AMPHORA code markerScannerAlt
+  as (possibly partial) rpoB sequences.
+  Results of scan written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB.pep.
+Filtering the reads so that there is at most one read per original sampled sequence.
+Determining the full-length sequences that correspond to the final set of reads
+Each read id converted to include the id for the corresponding full-length sequence.
+98 reads written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr.pep.
+98 full-length sequences corresponding to these reads written to file sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-final98.pep
+Aligning the reads in sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr.pep
+  and reference sequences in RefDB_rpoB_200.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming according to the mask;
+  this may take some time.
+Reads and reference sequences have been aligned to profile;,
+  alignment has been trimmed;
+  alignment written to sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln.
+Aligning the full-length sequences in sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-final98.pep
+  that correspond to the final set of reads
+  and reference sequences in RefDB_rpoB_200.pep 
+  to AMPHORA profile HMM for rpoB, using AMPHORA script MarkerAlignTrim.pl;
+  also, trimming the alignment according to the mask;
+  this may take some time.
+Full-length sequences and reference sequences have been aligned,
+  and alignment has been trimmed
+  and written to file sims_rpoB_RefDB_200/sim2_rpoB_RefDB_200/sim2_rpoB_RefDB_200-src-final98-RefDB.aln.
+
+
+All simulations complete.

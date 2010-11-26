@@ -1,0 +1,4 @@
+Command given: ../createRefDB.pl -n 200 -b RefDB_16SrRNA_200 -f 16SrRNA
+Getting sequence headers from file 16SrRNA.fna.
+200 sequences chosen randomly (without replacement) from remaining sequences.
+DNA reference database written to file RefDB_16SrRNA_200.fna.
