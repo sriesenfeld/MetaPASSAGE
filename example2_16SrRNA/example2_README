@@ -20,36 +20,41 @@ example2_16SrRNA:
  database appears in the population simulated. Finally, it shows how
  the pipeline can be run in batch.
 
+ Note: To run this example, you need to obtain or create an INFERNAL
+ CM model for 16S rRNA. 
+
  See example2_runsims.pl and example2_refdb_create.pl for more
  information.
+
 
 ---------
 Directory: /examples/example2_16SrRNA
 Contains the following files:
 
+- example2_README
 
-16SrRNA.fna : a set of 16S rRNA sequences from NCBI that have been
-   converted to DNA. (To make this conversion, you can use the script
-   RNA2DNA.pl in the util_scripts directory.)
-
-
-example2_refdb_create.pl : Perl script example for creating a
+- example2_refdb_create.pl : Perl script example for creating a
    reference database from a subset of the sequences above.
 
-example2_refdb_create.out : The output redirected from stdout from
-   runn1ng example2_refdb_create.pl, which illustrates the process of
+- example2_refdb_create.out : The output redirected from stdout from
+   running example2_refdb_create.pl, which illustrates the process of
    refDB creation in this instance.
 
 *** 
-example2_runsims.pl : The main Perl script for this example. It
+- example2_runsims.pl : The main Perl script for this example. It
    creates a few simulations from the 16S sequences and demonstrates
    some of the capabilities of the pipeline. See the Perl script for
    more details.
 ***
 
-example2_runsims.out : The output redirected from stdout from running
+- example2_runsims.out : The output redirected from stdout from running
    example2_runsims.pl, which illustrates the steps used in this
    instance of the pipeline.
+
+- 16SrRNA.fna : a set of 16S rRNA sequences from NCBI that have been
+   converted to DNA. (To make this conversion, you can use the script
+   RNA2DNA.pl in the util_scripts directory.)
+
 
 ------------
 Directory: example2_sample_output

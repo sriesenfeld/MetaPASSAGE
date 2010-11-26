@@ -39,17 +39,19 @@ batch.
 See example1_alt_runsims.pl and example1_alt_refdb_create.pl for more
 information.
 
+
 ---------
 Directory: /examples/example1_alt_rpoB
 Contains the following files:
 
+- example1_alt_README
 
 - example1_alt_refdb_create.pl : Perl script example for creating a
    reference database with a gene family, using a tree for which
    taxonomic information is available
 
 - example1_alt_refdb_create.out : The output redirected from stdout from
-   runn1ng example1_alt_refdb_create.pl, which illustrates the process
+   running example1_alt_refdb_create.pl, which illustrates the process
    of refDB creation in this instance.
 
 ***
@@ -62,6 +64,21 @@ Contains the following files:
 - example1_alt_runsims.out : The output redirected from stdout from
    running example1_alt_runsims.pl, which illustrates the steps used in
    this instance of the pipeline.
+
+- errormodel-80bp.mconf : MetaSim empirical model for 80-base-pair
+  Illumina reads (downloaded from MetaSim website).
+
+- rpoB.pep : Fasta file of rpoB protein sequences (file borrowed from
+  AMPHORA)
+
+- rpoB.fna : Fasta file of corresponding DNA sequences (a few from
+  rpoB.pep are missing), retrieved from NCBI
+
+- Genome.tree : Phylogenetic tree of AMPHORA taxa (file borrowed from
+  AMPHORA)
+
+- rpoB.hmm : Simple HMM model built from rpoB.pep using HMMER 3
+
 
 ---------
 Directory: example1_alt_sample_output
@@ -81,6 +98,10 @@ Created by running the example1_alt_refdb_create.pl script:
 - RefDB_rpoB_20.pep, RefDB_rpoB_20.fna : Analogous to the above
    reference database, but with 20 instead of 200 sequences.
 
+- Genome-maxPD.out : List of incremental contributions in phylogenetic
+  diversity of each of the taxa represented in the AMPHORA tree
+  Genome.tree.
+
 
 Created by running the example1_alt_runsims.pl script. (Note: Original
    alignment files are each located in the appropriate simulation
@@ -97,7 +118,7 @@ Created by running the example1_alt_runsims.pl script. (Note: Original
    file name captures the main steps the pipeline took to create the
    file.
 
-- sim<X>_rpoB_RefDB_20_<X>-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln : The
+- sim<X>_rpoB_RefDB_20-src-pd-reads-rp-thr-rpoB-sr-RefDB.aln : The
    analogous files to those above using the reference database
    RefDB_rpoB_20.pep.
 
@@ -109,7 +130,7 @@ Created by running the example1_alt_runsims.pl script. (Note: Original
    corresponds to the same simulation trial. This is a fasta alignment
    of full-length gene sequences.
 
-- sim<X>_rpoB_RefDB_20_<X>-src-final<Y>-RefDB.aln : The analogous files
+- sim<X>_rpoB_RefDB_20-src-final<Y>-RefDB.aln : The analogous files
    to those above, using the reference database RefDB_rpoB_20.pep
 
 
