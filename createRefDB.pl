@@ -15,11 +15,22 @@
 # by sampling uniformly at random from the input sequences or by
 # maximizing (for part or all of the sequences in the reference
 # database) the sequences' phylogenetic diversity.  This is explained
-# further below.  The Reference DB can be created by appending to an
-# input smaller Ref DB.
+# further below.  [Coming evenutally: The Reference DB can be created
+# by appending to an input smaller Ref DB].
 #
-# FIX: I think there is also a capability of only using sequences that
-# only appear on the input tree -- need to add this to the comments.
+# A phylogenetic tree with leaves whose labels contain taxonomic
+# information matching that in the sequence headers of the input
+# sequences can be used in two ways. (As an example of this type of
+# tree, see the AMPHORA file 'Genome.tree' and a file of AMPHORA
+# Reference Sequences, such as, rpoB.pep.) First, it can be used to
+# control the diversity of the reference database, by choosing the
+# sequences contributing the most incremental phylogenetic
+# diversity. Second, it can be used to control the sequences that
+# appear in the reference database. If a tree is provided, only
+# sequences coming from taxa that appear in the tree can be selected
+# for the reference database, even if phylogenetic diversity is not
+# used as a parameter for the selection of reference database
+# sequences.
 #
 # (2) A prerequisite for running the full simulation pipeline
 # MetaPASSAGE.pl with protein sequences is to have a file of the
