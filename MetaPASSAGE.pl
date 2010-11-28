@@ -793,7 +793,7 @@ if ($sim_flag) {
 	     '-c', $mean_clone_len, '-p', $stddev_clone_len, 
 	     '--mate_prob', $sanger_mate_probability,
 	     '--err_insert', $sanger_insertions, '--err_delete', $sanger_deletions,
-	     '--err_start', $sanger_err_start, '-err_end', $sanger_err_end);
+	     '--err_start', $sanger_err_start, '--err_end', $sanger_err_end);
     }
     unless( $no_del_metasim_db_flag) {
 	# default behavior: metasim database will be deleted after reads are generated
