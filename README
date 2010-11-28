@@ -70,23 +70,26 @@ Additional features influence aspects of the reads and alignment.
 
 ==STRUCTURE==
 
-The MetaPASSAGE directory contains this README and the main scripts:
+The MetaPASSAGE directory contains 
 
-  createRefDB.pl 
-  MetaPASSAGE.pl
-
-as well as an alternate MetaSim Empirical error model:
-
-  errormodel-80bp.mconf
-
-and six directories:
-
-  simPipeModules
-  util_scripts
-  example1_AMPHORA_rpoB
-  example1_sample_output
-  example2_16SrRNA
-  example2_sample_output
+ - this README 
+ - the main scripts:
+   createRefDB.pl 
+   MetaPASSAGE.pl
+ - an alternate MetaSim Empirical error model:
+   errormodel-80bp.mconf
+ - a directory of Perl modules:
+   simPipeModules
+ - a directory of simple Perl scripts:
+   util_scripts
+ - three example directories:
+   example1_AMPHORA_rpoB
+   example1_alt_rpoB
+   example2_16SrRNA
+ - three tar'd and zip'd directories of sample example output:
+   example1_sample_output.tgz
+   example1_alt_sample_output.tgz
+   example2_sample_output.tgz
 
 The simPipeModules directory contains Perl modules that are part of
 MetaPASSAGE and necessary for it to run.
@@ -94,12 +97,22 @@ MetaPASSAGE and necessary for it to run.
 The util_scripts directory contains a couple of scripts that may be
 useful in working with MetaPASSAGE.
 
-The directory example1_AMPHORA_rpoB contains example scripts for using
-MetaPASSAGE with AMPHORA. The directory example1_sample_output
-contains a sample of the output files written by these scripts.
+To run any of the examples, see the README file in each example
+directory.
 
-The directory example2_16SrRNA contains example scripts for using
-MetaPASSAGE with a set of 16S rRNA sequences. The directory
+The directory example1_AMPHORA_rpoB contains example scripts and data
+for using MetaPASSAGE with AMPHORA. The directory
+example1_sample_output contains a sample of the output files written
+by these scripts.
+
+The directory example1_AMPHORA_rpoB contains example scripts and data
+for using MetaPASSAGE with the same gene family as in example1, doing
+almost the same workflow, but without going through AMPHORA. The
+directory example1_sample_output contains a sample of the output files
+written by these scripts.
+
+The directory example2_16SrRNA contains example scripts and data for
+using MetaPASSAGE with a set of 16S rRNA sequences. The directory
 example2_sample_output contains a sample of the output files written
 by these scripts.
 
@@ -109,8 +122,8 @@ by these scripts.
 MetaPASSAGE was written in Perl 5 for use with Unix or
 Linux. MetaPASSAGE incorporates several software packages written by
 other authors. It can be modified to accomodate other packages with
-similar functionality, but as it is, the following software must be
-installed for full functionality of MetaPASSAGE:
+similar functionality. As it is, the crucial packages that must be
+installed for use with files of DNA sequences are:
 
 Perl 5 (Development was done using Perl 5.10)
   http://www.perl.org/
@@ -119,23 +132,43 @@ MetaSim
   http://www-ab.informatik.uni-tuebingen.de/software/metasim/
 NCBI BLAST (legacy version, blastall with blastx, blastp, formatdb) 
   ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/
-HMMER (hmmalign) 
-  http://hmmer.janelia.org/
-  You need HMMER 2 for use with AMPHORA:
-  http://hmmer.janelia.org/release-archive.html
-INFERNAL (cmalign) 
-  http://infernal.janelia.org/
+
+To use files of protein sequences as well -- in particular, to be able
+to translate DNA reads into peptides -- you need to also install
+EMBOSS, or at least the 'transeq' program in EMBOSS:
+
 EMBOSS (transeq)
   http://emboss.sourceforge.net/download/#Stable/
+
+To be able to align peptide reads, HMMER must be installed:
+
+HMMER (hmmalign) 
+  http://hmmer.janelia.org/
+  ( You need HMMER 2 for use with AMPHORA:
+  http://hmmer.janelia.org/release-archive.html )
+
+To be able to align RNA (converted into DNA) reads, INFERNAL must be
+installed:
+
+INFERNAL (cmalign) 
+  http://infernal.janelia.org/
+
+To use AMPHORA, including its database of protein-coding gene
+families, HMM models for them, and alignment faculty, including
+hand-curated masks for trimming alignments, you need to install
+AMPHORA and BioPerl (and make sure AMPHORA is installed so that it
+calls the correct version of HMMER, i.e., the version that was used to
+build its models). BioPerl is also used in the MetaPASSAGE
+retrieveSeqs.pm module for retrieving DNA sequences corresponding to
+AMPHORA gene families from NCBI:
+
 AMPHORA
   http://bobcat.genomecenter.ucdavis.edu/AMPHORA/
 BioPerl (for use with AMPHORA or sequence retreival only)
   http://www.bioperl.org/wiki/Getting_BioPerl
 
 
-There are many options for MetaPASSAGE.pl that can be used to
-customize the functionality. Alternatively, variables that you may
-want to customize are in SimPipeVars.pm.
+==PERL DEPENDENCIES==
 
 The script MetaPASSAGE.pl assumes that Perl can find the modules in
 the simPipeModules directory. The easiest way to ensure this is to add
@@ -154,22 +187,27 @@ Getopt::Std
 Getopt::Long
 List::Util
 
+In order to use work with AMPHORA, you also need these BioPerl
+packages (and whatever else AMPHORA requires):
+
+Bio::SeqIO
+Bio::SearchIO
+
 In addition, to use the retrieval mechanism for AMPHORA sequences
 built into createRefDB.pl, you need these BioPerl packages:
-
-(FIX: What to do if you do not want to install them)
 
 Bio::DB
 Bio::Factory
 Bio::SeqFeature
 
-In order to use work with AMPHORA, you also need these BioPerl
-packages (and whatever else AMPHORA requires):
 
-(FIX: What to do if you do not want to work with AMPHORA)
+==CUSTOMIZING METAPASSAGE==
 
-Bio::SeqIO
-Bio::SearchIO
+There are many options for MetaPASSAGE.pl that can be used to
+customize the functionality. (See MetaPASSAGE.pl or run it with option
+'--help' at the prompt, once it is installed.) Alternatively,
+variables that you may want to customize are in the Perl module
+SimPipeVars.pm.
 
 
 ==OUTPUT FILES==
