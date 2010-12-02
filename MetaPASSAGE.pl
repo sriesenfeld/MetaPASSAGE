@@ -246,7 +246,7 @@ Options:
         $num_reads_default (set in simPipeVars.pm); ignored if option
         '-s' is not set>
 
-    -p, --mean_read_length 
+    -p, --mean_read_len 
        <optional mean length of read to simulate with MetaSim; default
         is $mean_read_len_default (please see simPipeVars.pm, where
         this is set); passed to MetaSim. Note: it may make sense in
@@ -254,12 +254,12 @@ Options:
         length, i.e., to set the read length to be very large and the
         clone length to be what you want the read length to be>
 
-    -u, --stddev_read_length 
+    -u, --stddev_read_len 
        <optional standard deviation of read length distribution;
         default is $stddev_read_len_default (please see
         simPipeVars.pm, where this is set); passed to MetaSim>
 
-    --cl, --mean_clone_length
+    --cl, --mean_clone_len
        <optional mean length of clone fragment for simulation with
         MetaSim; default is $mean_clone_len_default (please see
         simPipeVars.pm, where this is set); passed to MetaSim. Note:
