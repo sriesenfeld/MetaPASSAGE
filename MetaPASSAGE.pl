@@ -642,7 +642,7 @@ if ($blast_flag or defined($blastdb_name)) {
 	    last;
 	}
     }
-    if ( $blastdb_ne_flag && (! defined ($gene_symbol)) && (! defined ($alt_gene_symbol)) ) {
+    if ( $blastdb_ne_flag && (! defined ($gene_symbol)) && (! defined ($alt_gene_symbol)) && (!$use_refdb)) {
 	die "Cannot find all blast database files with basename $blastdb_name.\n".
 	    "Please specify the name of an existing blast database via option '-d'!\n";
     }
@@ -715,10 +715,14 @@ if (defined ($num_seqs) and ($num_seqs < 0)) {
     if (-e $sample_file_dna) {
 	foreach my $ext (@fasta_alt_exts) {
 	    if ($sample_file_dna =~ ('(.+)'.$ext .'$')) {
+		$sample_file_basename = File::Spec->rel2abs(File::Spec->catdir($out_dir, $1));
 		$sample_file_pep = $1.$pep_fasta_ext;
 		last;
+	    } else {
+		$sample_file_basename = File::Spec->rel2abs(File::Spec->catdir($out_dir, $sample_file_dna));
 	    }
 	}
+	$sample_file_dna = File::Spec->rel2abs($sample_file_dna);
 	if (!(-e $sample_file_pep)) {
 	    $sample_file_pep = undef;
 	}
@@ -735,12 +739,13 @@ if (($sim_flag) and !(-d $metasim_path)) {
 if ( (defined ($sample_file_dna) and $add_seqs_flag) or ($num_seqs and $sim_flag) ) {
     # pad sequences
     if ($pad_size) {
-	($sample_file_dna_padded, $pad_size)=seqs_pad($sample_file_dna, $pad_size);
+	($sample_file_dna_padded, $pad_size)=seqs_pad($sample_file_dna, $pad_size,
+						      $sample_file_basename.$pad_filename_part.$dna_fasta_ext);
     }
     print $log_fh "Full-length sequences padded on each end with $pad_size \'N\'s were written to file".
 	"\n  ". File::Spec->abs2rel($sample_file_dna_padded)."\n";
-    print $log_fh "Adding sequences from ". File::Spec->abs2rel($sample_file_dna) ." to the MetaSim database.\n";
     $src_seqs_dna = defined($sample_file_dna_padded) ? $sample_file_dna_padded : $sample_file_dna;    
+    print $log_fh "Adding sequences from ". File::Spec->abs2rel($src_seqs_dna) ." to the MetaSim database.\n";
 
     # add sampled full-length sequences to the MetaSim database
     if (! $global_metasim_db_flag) {
