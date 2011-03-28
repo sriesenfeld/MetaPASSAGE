@@ -156,10 +156,21 @@ sub run_blast_transeq ($$$;$$) {
 		$framescount++;
 		print FR_OUT ''.(($type eq PROTEIN) ? "Frame: ": "Orientation: "). "$key\t Min expect: $bestExpects{$key}\n".
 		    "\t\tSequence hit: ".$names4bestExpects{$key}."\n";	 
-		# only translate in this frame if its expect value 
-		# is < blast_max_ratio*(best expect over all frames) and also less than $best_max_expect		
-		if ( ($bestExpects{$key}==0) or 
-		     ( ($bestExpects{$key} < $blast_max_ratio*$bestExpect ) and ($bestExpects{$key} < $blast_max_expect) ) ) {
+		# only translate in this frame if its expect value is
+		# < blast_max_ratio*(best expect over all frames) and
+		# also less than $best_max_expect.  if blast_max_ratio
+		# is negative, translate in one frame only (the best),
+		# as long as it has expect less than $best_max_expect.
+		# NOTE: If we translate/orient more than once, then
+		# there will be multiple peptide reads with the same
+		# id but different sequences! Deal with this by
+		# setting $blast_max_ratio negative.
+		if ( ($bestExpects{$key} < $blast_max_expect) 
+		     and
+		     ( ($blast_max_ratio < 0) and ( $bestExpects{$key} == $bestExpect ) and ($framesTrans == 0) )
+		     or
+		     ( ($blast_max_ratio > 0) and ( ($bestExpects{$key}==0) or 
+						    ($bestExpects{$key} < $blast_max_ratio*$bestExpect ) ) ) ) {
 		    $framesTrans++;
 		    if ($type eq PROTEIN) {
 			if ($key =~ '^\+(.)') {
@@ -181,8 +192,6 @@ sub run_blast_transeq ($$$;$$) {
 			    die "Error running transeq: $@\n";
 			}
 			print FR_OUT "Translated with transeq using table $trans_table.\n";
-			# FIX!!: If we translate more than once then, there will be multiple peptide reads with the same id
-			# but different sequences! Need to come back to figure out how to deal with this. 
 			# Append file of current translated sequence to file of translated sequences
 			append_file (\*TR_OUT, $temp_seq_tra_file);
 			# print "Read $short_queryname:  blastx identified $framescount frame" . 

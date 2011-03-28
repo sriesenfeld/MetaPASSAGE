@@ -157,11 +157,15 @@ sub run_markerScannerAlt (%) {
     name. $args{'-f'} is the desired name of the output
     file. $args{'--amphora'} is the path to AMPHORA.
 
+## NOTE!!: ADD COMMENTS HERE ABOUT ALIGNING --WITHALI USING ALN ON
+## REFDB, also may want to add the facility for hmmalign
+
 =cut
 
 sub run_alignTrim (%) {    
     my %options = @_;
-    my ($gene, $outdir, $logfile, $outfile, $seqfile, $refdb, $partial_flag, $aligner, $type, $model);
+    my ($gene, $outdir, $logfile, $outfile, $seqfile, $refdb, 
+	$partial_flag, $aligner, $type, $model, $withali_aln);
     
     if (!($seqfile = $options{'-r'})) {
 	die "You must specify a file containing sequences for run_alignTrim.\n";
@@ -172,6 +176,8 @@ sub run_alignTrim (%) {
     $aligner = $options{'-a'};  # 0 is AMPHORA, 1 is cmalign (for now)
     $type = $options{'-t'}; 
     $model = $options{'-m'};
+    $withali_aln = $options{'-w'};
+    
     if (defined( $options{'--amphora'})) {
 	$amphora_path = $options{'--amphora'};
 	define_amphora_paths($amphora_path);
@@ -267,7 +273,7 @@ sub run_alignTrim (%) {
 	chdir ($curdir) or die "Cannot move back to original working directory $curdir: $!\n";
 
     } else {
- 
+	
  	if ($aligner eq CMALIGN) {	 
 	# Would like to first align refdb to model, then fix that alignment, but cannot do this.
 	# To do something like this, we would have to actually excise RefDB sequences from 
@@ -281,8 +287,10 @@ sub run_alignTrim (%) {
 
 	    $cmd = 'cmalign --hbanded'.($partial_flag ? ' --sub' : '').
 		(($type eq RNA2DNA) ? ' --dna':''). 
-		' -o '.$alignment.' '. $model.' '. $temp_stuff_to_align
-		.' 2>&1 > '.$logfile; 
+		' -o '.$alignment.
+		(defined ($withali_aln) ? " --withali $withali_aln --rf " : ' ').
+		$model.' '. $temp_stuff_to_align
+		.' 2>&1 > ' .$logfile; 
 	} else {
 	    # could try to do this with --withali option and align refdb first
 	    $cmd = 'hmmalign -o '.$alignment.' '. $model.' '. $temp_stuff_to_align.

@@ -126,7 +126,7 @@ $amphora_ref_aln_file_ext = '.aln'; # File extension used by AMPHORA
 				    # amino acid reference sequences
 define_amphora_paths(); # Defines needed subdirectories and files for
 			# using AMPHORA (see below)
-$hmmer2_path = '/usr/local/hmmer2/bin/'; # Path to HMMER Ver 2
+$hmmer2_path = '/home/Common/opt/Bio/hmmer-2.3.2/bin/'; # Path to HMMER 2
 					 # executables (incl. hmmpfam)
 
 # path for NCBI-BLAST programs (leave empty if they are in the default $PATH)
@@ -223,15 +223,17 @@ our(@blast_db_pep_exts, @blast_db_na_exts, $blast_max_expect, $blast_max_ratio, 
 @blast_db_pep_exts = ('.phr', '.pin', '.psq');   # The extensions used by blastall for the peptide database
 @blast_db_na_exts = ('.nhr', '.nin', '.nsq');    # The extensions used by blastall for the nucleotide database
 $num_blastdb_hits_default = 50;  # Gives the default number of blast hits found.
-$blast_max_expect = 1;          # Assume all blastx or blastn expect values are smaller than $blast_max_expect 
+$blast_max_expect = 1;          # Greater than 0. All blastx or blastn expect values must be smaller than $blast_max_expect 
                                 # (used for parsing blast output); ignore reads that have only larger blast expect values;
                                 # should not usually require customization.
-$blast_max_ratio = 1e5;         # Translation is done in a frame only if the lowest blastx expect value for 
+$blast_max_ratio = -1;          # Translation is done in a frame only if the lowest blastx expect value for 
                                 # that frame is 0 or is less than the product of blast_max_ratio and the 
                                 # lowest blastx expect value over all frames; 
                                 # similarly, a read is only reverse complemented if the lowest blastn expect 
                                 # value for that strand is 0 or is less than the product of the blast_max_ratio
-                                # and the lowest blastn expect value for both strands.
+                                # and the lowest blastn expect value for both strands. 
+                                # If blast_max_ratio is set negative, translate/orient in one frame only (the best),
+                		# as long as it has expect less than $best_max_expect.
 
 
 # alnqc: For quality control on the simulated reads and the alignment, specifically

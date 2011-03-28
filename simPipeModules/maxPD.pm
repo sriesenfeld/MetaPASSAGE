@@ -100,6 +100,9 @@ sub maxPD_list(@) {
     close IN;
     open (OUT,">$output_list_file") || die "Please define output file\n"; 
     my $tree_obj=DWU_TREE->new($in_tree);
+    if (!$tree_obj) {
+	die "Cannot create tree object from file $tree_file!\n";
+    }
     if($pool){
 	$tree_obj->pool_only(\%pool);
     }
@@ -220,7 +223,7 @@ foreach my $id(keys %{$class->{id_tn}}){
     my ($I_id,$I_dist)=&max_dist($class,$start_id);
     my ($II_id,$II_dist)=&max_dist($class,$I_id);
 
-   ## print $start_id."\t".$I_dist."\t".$I_id."\t".$II_dist."\t".$II_id."\n";
+   # print $start_id."\t".$I_dist."\t".$I_id."\t".$II_dist."\t".$II_id."\n";
     return $class->{id_tn}->{$II_id};
 }
 

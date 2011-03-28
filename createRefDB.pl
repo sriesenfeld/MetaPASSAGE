@@ -128,9 +128,10 @@ Usage: $0 <options (see below)>
     -c <(optional) maximum number of taxa in tree for which maxPD
          should be computed; the taxa in the output are the taxa used
          to populate the reference database, both by maxPD value and
-         by random sampling (can be set to number of taxa in input
-         tree); this default is set to work well with AMPHORA protein
-         families but should probably be set explicitly for other use>
+         by random sampling (may normally be set to number of taxa in
+         input tree); this default is set to work well with AMPHORA
+         protein families but should probably be set explicitly for
+         other use>
 
     -o <(optional) file name for maxPD_list() output; if option '-t'
         is also set, then the output of running maxPD_list() on the
@@ -259,12 +260,12 @@ if (!$opts{'r'}) {
 	make_reference_db( '-n', $total_num_seqs, '-m', $maxpd_num_seqs, 
 			   '-g', $gene_symbol, '-o', $basename, 
 			   '-d', $dir, '-p', $maxpd_outfile, '-t', $treefile, 
-			   '-c', $maxpd_default_num ); #, '-a', $opts{'a'}); 
+			   '-c', $maxpd_compute_num ); #, '-a', $opts{'a'}); 
     } else {
 	make_reference_db( '-n', $total_num_seqs, '-m', $maxpd_num_seqs, 
 			   '-o', $basename, 
 			   '-p', $maxpd_outfile, '-t', $treefile, 
-			   '-c', $maxpd_default_num, 
+			   '-c', $maxpd_compute_num, 
 			   '-f', $all_seqs_basename );  #, '-a', $opts{'a'});
     } 
 }

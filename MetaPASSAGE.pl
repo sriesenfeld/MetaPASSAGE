@@ -139,21 +139,22 @@ Options:
         extensions are in the module simPipeVars.pm); if no file is
         found with the given base name, then the reads are aligned
         without the reference sequences; used with option '-a', and
-        also with option '-m' and '-d'>
+        also with option '-m', '-d', and '--align_withali'>
 
     -n, --num_seqs 
        <total number of distinct sequences to be sampled for the
         simulated population from the whole set of full-length
-        sequences (except Candidatus and Mycoplasma sequences), which
-        is specified by option '-g' or '-y'; see option '-m', which
-        affects the extent to which these sequences are sampled from
-        the reference database; the sampled sequences are written to a
-        fasta file; if option '-s' is set, the current MetaSim
-        database is deleted and these sequences are automatically
-        added to the MetaSim database; by default (if neither option
-        '-t' nor option '--taxon_profile_ratio' is set), a uniform
-        MetaSim taxonomic profile (with extension '.mprf') for these
-        sequences is generated>
+        sequences (except Candidatus and Mycoplasma sequences, if
+        annotated in the headers), which is specified by option '-g'
+        or '-y'; see option '-m', which affects the extent to which
+        these sequences are sampled from the reference database; the
+        sampled sequences are written to a fasta file; if option '-s'
+        is set, the current MetaSim database is deleted and these
+        sequences are automatically added to the MetaSim database; by
+        default (if neither option '-t' nor option
+        '--taxon_profile_ratio' is set), a uniform MetaSim taxonomic
+        profile (with extension '.mprf') for these sequences is
+        generated>
 
     -m, --num_ref_seqs
         <number of sequences among the total specified by option '-n'
@@ -172,11 +173,11 @@ Options:
        <(alternate to option '-n') fasta file of DNA sequences to be
         used to simulate metagenomic reads via option '-s' or for
         parsing via option '-q' a file of metagenomic reads specified
-        by option '-f'; use option '-j' to add the sequences to the
-        MetaSim database if they have not already been added; option
-        '-i' is ignored if option '-n' is set; if option '-s' is set
-        and '-t' is not, then a uniform MetaSim taxonomic profile for
-        these sequences is generated.>
+        by option '-f' or option '-l'; use option '-j' to add the
+        sequences to the MetaSim database if they have not already
+        been added; option '-i' is ignored if option '-n' is set; if
+        option '-s' is set and '-t' is not, then a uniform MetaSim
+        taxonomic profile for these sequences is generated.>
 
     --pad
        <integer, size of pad of 'N's that will be concatenated to each
@@ -321,22 +322,22 @@ Options:
     -q, --target_num_reads 
       <optional number of reads written into a new file of simulated
        metagenomic reads, which are a subset of those reads that have
-       been created via option '-s' or specified via option '-f'; if
-       set to a negative value, chooses the subset so that there is at
-       most one read per sequence for each sequence in the fasta file
-       of complete gene sequences created by option '-n' or specified
-       via option '-i'; if set to a positive value, chooses a subset
-       of the specified size uniformly at random from the full set of
-       reads (which should preserve the skew of the population
-       distribution, if there is one); if set to 0 or not set, no
-       filtering is done; the reason one might use this sampling
-       filter is to generate more reads than will be used, as not all
-       reads will necessarily be recognized by BLAST (or AMPHORA) as
-       belonging to the gene family; if '-x' is set, filtering is done
-       after reads have been translated/oriented (and possibly scanned
-       via AMPHORA), which means one should be careful about how many
-       reads are initially created, since the BLAST step and AMPHORA
-       scan are slow>
+       been created via option '-s' or specified via option '-f' or
+       option '-l'; if set to a negative value, chooses the subset so
+       that there is at most one read per sequence for each sequence
+       in the fasta file of complete gene sequences created by option
+       '-n' or specified via option '-i'; if set to a positive value,
+       chooses a subset of the specified size uniformly at random from
+       the full set of reads (which should preserve the skew of the
+       population distribution, if there is one); if set to 0 or not
+       set, no filtering is done; the reason one might use this
+       sampling filter is to generate more reads than will be used, as
+       not all reads will necessarily be recognized by BLAST (or
+       AMPHORA) as belonging to the gene family; if '-x' is set,
+       filtering is done after reads have been translated/oriented
+       (and possibly scanned via AMPHORA), which means one should be
+       careful about how many reads are initially created, since the
+       BLAST step and AMPHORA scan are slow>
 
     -d, --blastdb 
        <the base name (including the path) of an existing blast
@@ -409,6 +410,15 @@ Options:
         how the alignment method is decided; this option is ignored if
         option '-a' is not also selected]
 
+    --align_withali
+       [no value taken; if set, then if alignment is done with
+        INFERNAL (i.e., for type RNA2DNA), then cmalign is run with
+        the '--withali' and '--rf' options, where the alignment given
+        for the '--withali' option is the reference database which has
+        the basename specified by option '-v' and the stockholm
+        alignment extension '.sto'. If an alignment with this name
+        does not exist, alignment is done without these options.]
+
     --save_align_log
        [no value taken; if set, then a log of the alignment process is
         saved; this can be useful when aligning with AMPHORA; default
@@ -422,16 +432,15 @@ Options:
     -l, --tr_reads_file 
        <optional fasta file of peptide translations of simulated
         metagenomic reads, if type is PROTEIN, or of correctly
-        oriented DNA reads, to be aligned via option '-a'>
+        oriented DNA reads, to be possibly filtered via option '-q'
+        and aligned via option '-a'>
 
     --drop_len
-       <an integer giving the minimum length (in amino acids, if type
-        is PROTEIN, and in base pairs otherwise) of a read to be
-        included in the output alignment; reads generated that are
-        shorter than this length will be excluded (this only applies
-        if an alignment is being constructed); default value is 25
-        amino acids / 75 base pairs (set in simPipeVars.pm); if set to
-        0, no sequences are dropped>
+       <an integer giving the minimum length (in base pairs) of a read
+        to be included in the final set of output reads, as well as in
+        an output alignment; simulated reads that are shorter than
+        this length will be excluded; default value is 25 base pairs;
+        if set to 0, no sequences are dropped>
 
     --model
        <filename for a file containing the model used for alignment;
@@ -465,6 +474,7 @@ my ($help_flag, $add_seqs_flag, $sim_flag, $blast_flag, $align_flag,
     $num_seqs, $num_ref_seqs, $type, $cur_dir, $out_dir,
     $full_path_cur_dir, $basename, $fullpath_basename, $use_refdb,
     $ref_db_file_basename, $ref_db_file_pep, $ref_db_file_dna,
+    $ref_db_file_aln,
     $alt_seqs_basename, $sample_file_basename, $sample_file_dna,
     $sample_file_dna_padded,$sample_file_pep, $pad_size,$src_seqs_dna,
     $sample_final_src_seqs, $final_num_src_seqs, $tax_profile_ratio,
@@ -476,7 +486,7 @@ my ($help_flag, $add_seqs_flag, $sim_flag, $blast_flag, $align_flag,
     $mean_clone_len, $stddev_clone_len, $num_blastdb_hits,
     $blast_expect_cutoff, $blastdb_name, $blastdb_ne_flag,
     $frames_file, $trans_file, $tr_reads_file, $hmm_profile, $model,
-    $len_threshold, $align_log_flag, @args);
+    $len_threshold, $align_log_flag, $align_withali_flag, @args);
 
 ####### SET-UP DEFAULT VALUES FOR SOME VARIABLES
 
@@ -550,7 +560,8 @@ GetOptions(
     'hmmer2_path:s' => \$hmmer2_path,
     'drop_len:i' => \$len_threshold,
     'model:s' => \$model,
-    'noscan|z' => \$noscan_flag    
+    'noscan|z' => \$noscan_flag,
+    'align_withali' => \$align_withali_flag
     );
 
 
@@ -607,7 +618,16 @@ if (! defined($gene_symbol) ) {
 if (defined ($ref_db_file_basename) ) {
     $ref_db_file_pep = $ref_db_file_basename.$pep_fasta_ext;
     $ref_db_file_dna = $ref_db_file_basename.$dna_fasta_ext;
-} 
+    if ($align_withali_flag) {
+	$ref_db_file_aln = $ref_db_file_basename.$stockholm_aln_ext;
+	if (! (-e $ref_db_file_aln)) {
+	    print $log_fh "Cannot find reference database alignment $ref_db_file_aln\n".
+		"  for use with option --align_withali.\n".
+		"  Will align without it.\n";
+	    $align_withali_flag = undef;
+	}
+    } 
+}
 
 if ( ( ($type eq PROTEIN) and defined ($ref_db_file_pep) and ((-e $ref_db_file_pep)) )
      or ( ($type ne PROTEIN) and defined ($ref_db_file_dna) and ((-e $ref_db_file_dna)) ) ){
@@ -867,7 +887,7 @@ if ((!$align_flag) and (!$blast_flag) and ($num_seqs or defined($sample_file_dna
     ($filtered_sim_reads_file, $sample_final_src_seqs, $final_num_reads, $final_num_src_seqs) =
 	filter_reads($reads_to_filter, $num_filtered_reads, $sample_file_dna, $out_dir, 
 		     ($type eq PROTEIN) ? $sample_file_pep : $sample_file_dna); 
-    print $log_fh "Determining the full-length sequences that correspond to the final set of reads\n".
+    print $log_fh "Determining the full-length sequences that correspond to the final set of reads.\n".
     print $log_fh "Each read id converted to include the id for the corresponding full-length sequence.\n";
     print $log_fh ''.$final_num_reads. " reads written to ". File::Spec->abs2rel($filtered_sim_reads_file).".\n";
     if (-e $sample_final_src_seqs) {
@@ -973,9 +993,9 @@ if ( (!$noscan_flag) and (defined($gene_symbol)) and ($type eq PROTEIN) ) {
     $reads_to_align = $trans_file;   
 }
 
-####### POSSIBLY FILTER READS, ACCORDING TO TARGET NUMBER DESIRED ALSO
-####### CREATE A FILE OF FULL-LENGTH SEQUENCES CORRESPONDING TO THE
-####### FINAL SET OF READS
+####### POSSIBLY FILTER READS, ACCORDING TO TARGET NUMBER DESIRED.
+####### ALSO, CREATE A FILE OF FULL-LENGTH SEQUENCES CORRESPONDING TO
+####### THE FINAL SET OF READS.
 
 if ( $num_seqs or defined($sample_file_dna) ) {
     if ($num_filtered_reads < 0) {
@@ -1034,7 +1054,7 @@ if ($align_flag) {
 	print $log_fh "\n  (without reference database sequences) ";
     }
     print $log_fh "\n  to ".
-	( !defined($alt_seqs_basename) ? "AMPHORA profile HMM for $gene_symbol, ".
+	( !defined($model) ? "AMPHORA profile HMM for $gene_symbol, ".
 	  "using AMPHORA script MarkerAlignTrim.pl;\n"."  also, trimming according to the mask;\n" 
 	  : "input model $model, using $aligner;\n" ).	  	      
 	  "  this may take some time.\n";	
@@ -1042,6 +1062,10 @@ if ($align_flag) {
     my ($alignment, $align_log, %align_args);
     
     %align_args = ('-r', $reads_to_align, '-d', $out_dir, '-p', 1, '-t', $type, '-a', $aligner);
+    if ($align_withali_flag) {
+	print $log_fh "  Using fixed alignment for reference database.\n";
+	$align_args{'-w'}= $ref_db_file_aln;
+    }
     if (defined($gene_symbol)) {
 	$align_args{'-g'}= $gene_symbol;
 	$align_args{'--amphora'} = $amphora_path;
@@ -1051,7 +1075,7 @@ if ($align_flag) {
 	die "Must provide either a model via option '--model' or a gene symbol via option '-g'\n".
 	    "  (for use with AMPHORA) to do alignment!\n";
     }
-    if ($use_refdb) {
+    if ($use_refdb and !($align_withali_flag)) {
 	$align_args{'-b'}= ($type eq PROTEIN) ? $ref_db_file_pep : $ref_db_file_dna;
     }
     

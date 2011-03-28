@@ -22,7 +22,9 @@
 #
 # The functions are designed not to select or sample sequences whose
 # names contain words listed in @taxa_to_avoid (set in
-# simPipeVars.pm), which has by default Mycoplasma and Candidatus.
+# simPipeVars.pm), which has by default Mycoplasma and Candidatus. The
+# taxonomic names must be annotated in the sequence headers (and leaf
+# labels) for this to work.
 
 package refSeqs;
 
