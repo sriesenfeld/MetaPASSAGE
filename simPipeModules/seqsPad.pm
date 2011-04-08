@@ -95,17 +95,20 @@ sub seqs_remove_pad ($;$) {
     open(IN, "$file_in") or die "Cannot open $file_in for read: $!\n";
     open(OUT, ">$file_out") or die "Cannot open $file_out for write: $!\n";
     
+    my $bad_seq_pattern = qr/[^N]+N+[^N]+/;
+    my $ok_seq_pattern = qr/^N*([^N]*)N*$/;
     my ($hdr, $seq);
     my $first_hdr = 1;
     my $line_len;
     while (my $line = <IN>) {
 	if ($line =~ /^>/) {
 	    if (! $first_hdr) {
-		if ($seq =~ /[^N]+N+[^N]+/) {
+		if ($seq =~ /$bad_seq_pattern/) {
+		    # warn "Bad seq is: $seq\n";
 		    $seq = '';
 		}
-		$seq =~ s/N+([^N]*)N+/$1/;
-		if ($seq eq '') {
+		$seq =~ s/$ok_seq_pattern/$1/;
+		if ($seq eq '') {  # catches seqs that match $bad_seq_pattern and also seqs that have only 'N's
 		    $bad_seqs++;
 		} else {
 		    print OUT $hdr;
@@ -126,10 +129,11 @@ sub seqs_remove_pad ($;$) {
     }
     
     if (! $first_hdr) {
-	if ($seq =~ /[^N]+N+[^N]+/) {
+	if ($seq =~ /$bad_seq_pattern/) {
+	    # warn "Bad seq is: $seq\n";
 	    $seq = '';
 	}
-	$seq =~ s/N+([^N]*)N+/$1/;
+	$seq =~ s/$ok_seq_pattern/$1/;
 	if ($seq eq '') {
 	    $bad_seqs++;
 	} else {
