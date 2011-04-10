@@ -11,6 +11,7 @@ package runScanAlignTrim;
 use strict;
 use warnings;
 
+use Cwd 'abs_path';
 use File::Spec;
 use File::Copy;
 
@@ -65,11 +66,11 @@ sub run_markerScannerAlt (%) {
     }
     # my $workingdir;
     my $curdir = File::Spec->curdir();
-    $curdir = File::Spec->rel2abs($curdir);
+    $curdir = abs_path($curdir);
     if (!($outdir = $options{'-d'})) {
 	$outdir = $curdir; 
     }    
-    $outdir = File::Spec->rel2abs( $outdir ) ;    
+    $outdir = abs_path( $outdir ) ;    
     if (defined ($options{'-a'})) {
 	$amphora_path = $options{'-a'};
 	define_amphora_paths($amphora_path);
@@ -83,7 +84,7 @@ sub run_markerScannerAlt (%) {
 	$outfile = "$basename-$gene".$pep_fasta_ext;	
 	$scanned_reads = File::Spec->catfile($outdir, $outfile);
     } else {
-	$scanned_reads = File::Spec->rel2abs($outfile);
+	$scanned_reads = abs_path($outfile);
     }    
     my $tempdir = tempdir ( 'tempdirXXXXX', DIR => $outdir, CLEANUP=>1 );
     my $stuff_to_scan = 'query'.$pep_fasta_ext;
@@ -195,11 +196,11 @@ sub run_alignTrim (%) {
 	die "Please provide a model to align the sequences to!\n";
     }
     my $curdir = File::Spec->curdir();
-    $curdir = File::Spec->rel2abs($curdir);
+    $curdir = abs_path($curdir);
     if (!($outdir = $options{'-d'})) {
 	$outdir = $curdir; 
     }    
-    $outdir = File::Spec->rel2abs( $outdir ) ;
+    $outdir = abs_path( $outdir ) ;
     my ($basename, $alignment);
     if (!$outfile) {
 	$basename = get_basename($seqfile);
@@ -207,20 +208,20 @@ sub run_alignTrim (%) {
 	    (($aligner eq AMPHORA) ? $aln_fasta_ext : $stockholm_aln_ext);	
 	$alignment = File::Spec->catfile($outdir, $outfile);
     } else {
-	$alignment = File::Spec->rel2abs($outfile);
+	$alignment = abs_path($outfile);
 	$basename = get_basename($outfile, ($aln_fasta_ext, $stockholm_aln_ext));
     }
     if (!($logfile = $options{'-l'})) {
 	$logfile = File::Spec->catfile($outdir, $basename.$align_log_filename);
     }
-    $logfile = File::Spec->rel2abs($logfile);
+    $logfile = abs_path($logfile);
     
     my $temp_stuff_to_align;
     my ($temp_fh, $tempdir);
     
     if ($aligner eq AMPHORA) {
 	$tempdir = tempdir ( 'tempdirXXXXX', DIR => $outdir, CLEANUP=>1 );    
-	$tempdir = File::Spec->rel2abs($tempdir);
+	$tempdir = abs_path($tempdir);
 	$temp_stuff_to_align = File::Spec->catfile($tempdir, $gene.$amphora_ref_file_ext);	
 	
     } else {

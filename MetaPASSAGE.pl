@@ -61,6 +61,7 @@ use strict;
 use warnings;
 
 use File::Spec;
+use Cwd 'abs_path';
 use File::Copy "mv";
 use Getopt::Long;
 use POSIX qw(INT_MAX);
@@ -96,9 +97,11 @@ Options:
         program ends]
 
     --type 
-       <string, giving data type: 'Protein' or 'RNA2DNA' (i.e., RNA
-        converted to DNA); defaults to 'Protein'; (other types,
-        e.g. 'DNA', could be added)>
+      <string, giving data type: 'Protein' or 'RNA2DNA' (i.e., RNA
+       converted to DNA); defaults to 'Protein'; other types,
+       e.g. 'DNA', will be added; for now use 'RNA2DNA' type for DNA
+       sequences and avoid alignment step ('-a' option), as the
+       default alignment method for this type is INFERNAL cmalign>
 
     -g, --gene 
        <gene, family symbol, e.g., 'rpoB', specfying which protein
@@ -494,7 +497,7 @@ my $default_type = PROTEIN;  # default type is PROTEIN
 $basename = $sim_basename_default;
 $cur_dir = File::Spec->curdir();
 $out_dir = $cur_dir;
-$full_path_cur_dir = File::Spec->rel2abs($cur_dir);
+$full_path_cur_dir = abs_path($cur_dir);
 $num_reads=$num_reads_default; 
 $global_metasim_db_flag = 0;
 $no_del_metasim_db_flag = 0;
@@ -570,7 +573,7 @@ if ($help_flag) {
 }
 
 if (defined ($amphora_path_nondefault)) {
-    $amphora_path = File::Spec->rel2abs($amphora_path_nondefault);
+    $amphora_path = abs_path($amphora_path_nondefault);
     define_amphora_paths($amphora_path);
 }
 
@@ -580,8 +583,7 @@ unless ( (-d $out_dir) and (-w $out_dir) ) {
     mkdir($out_dir) or die "Cannot find, write, or make directory $out_dir.\n";
 }
 
-$fullpath_basename = File::Spec->catfile($out_dir, $basename);
-$fullpath_basename = File::Spec->rel2abs($fullpath_basename);
+$fullpath_basename = File::Spec->catfile(abs_path($out_dir), $basename);
 
 if ($log_flag) {
     $log_file = $fullpath_basename.$log_file_ext;
@@ -733,16 +735,14 @@ if (defined ($num_seqs) and ($num_seqs < 0)) {
     }    
 } elsif (defined ($sample_file_dna)) {  
     if (-e $sample_file_dna) {
+	$sample_file_dna = abs_path($sample_file_dna);
 	foreach my $ext (@fasta_alt_exts) {
 	    if ($sample_file_dna =~ ('(.+)'.$ext .'$')) {
-		$sample_file_basename = File::Spec->rel2abs(File::Spec->catdir($out_dir, $1));
 		$sample_file_pep = $1.$pep_fasta_ext;
 		last;
-	    } else {
-		$sample_file_basename = File::Spec->rel2abs(File::Spec->catdir($out_dir, $sample_file_dna));
 	    }
 	}
-	$sample_file_dna = File::Spec->rel2abs($sample_file_dna);
+	$sample_file_basename = $fullpath_basename;
 	if (!(-e $sample_file_pep)) {
 	    $sample_file_pep = undef;
 	}
@@ -801,7 +801,7 @@ if ($sim_flag) {
     if (! (-e $metasim_profile)) {
 	die "Cannot find taxonomic profile $metasim_profile for MetaSim.\n";
     }
-    $metasim_profile = File::Spec->rel2abs($metasim_profile);
+    $metasim_profile = abs_path($metasim_profile);
     print $log_fh "Running MetaSim to create $num_reads reads.\n";
     $metasim_reads_file = get_basename($metasim_profile, $metasim_profile_ext);
     if ($metasim_reads_file =~ /(.*)-$src_filename_default$/) {
@@ -811,7 +811,7 @@ if ($sim_flag) {
     @args = ('-m',  $metasim_profile, '-r', $num_reads, '-f', $metasim_log, 
 	     '-o', $metasim_reads_file);
     if (defined ($metasim_error_conf_file)) {
-	$metasim_error_conf_file = File::Spec->rel2abs($metasim_error_conf_file);
+	$metasim_error_conf_file = abs_path($metasim_error_conf_file);
 	push(@args, '-e', $metasim_error_conf_file);
     } else {
 	push(@args, '-l', $mean_read_len, '-s', $stddev_read_len, 
@@ -841,7 +841,7 @@ if ($sim_flag) {
 	$metasim_reads_file = $dna_reads_file;
     }
     unless ( $global_metasim_db_flag) {
-	$metasim_reads_file = File::Spec->rel2abs($metasim_reads_file);
+	$metasim_reads_file = abs_path($metasim_reads_file);
 	chdir($full_path_cur_dir) || die "Cannot change directories back to original directory: $full_path_cur_dir: $!\n";
 	$metasim_reads_file = File::Spec->abs2rel($metasim_reads_file);
     }
@@ -853,7 +853,7 @@ if ($sim_flag) {
     unless ($no_del_metasim_db_flag) {
 	print $log_fh "MetaSim database deleted.\n";
     }
-
+    
 } elsif (defined ($metasim_reads_file) and !(-e $metasim_reads_file)) {
     # use specified file of metagenomic reads
     die "Cannot find file $metasim_reads_file containing simulated metagenomic reads.\n";
@@ -872,7 +872,7 @@ if (defined ($metasim_reads_file)) {
 	$thr_metasim_reads_file = $metasim_reads_file;
     }
 }
-####### POSSIBLY FILTER NOW, IF NO TRANSLATION OR ALIGNMENT IS BEING DONE,
+####### POSSIBLY FILTER NOW, IF NO ORIENTATION, TRANSLATION, OR ALIGNMENT IS BEING DONE,
 #######    ACCORDING TO TARGET NUMBER DESIRED;
 ####### ALSO CREATE A FILE OF FULL-LENGTH SEQUENCES CORRESPONDING TO THE FINAL SET OF READS 
 
@@ -886,14 +886,16 @@ if ((!$align_flag) and (!$blast_flag) and ($num_seqs or defined($sample_file_dna
     }   
     ($filtered_sim_reads_file, $sample_final_src_seqs, $final_num_reads, $final_num_src_seqs) =
 	filter_reads($reads_to_filter, $num_filtered_reads, $sample_file_dna, $out_dir, 
-		     ($type eq PROTEIN) ? $sample_file_pep : $sample_file_dna); 
-    print $log_fh "Determining the full-length sequences that correspond to the final set of reads.\n".
+		     ($type eq PROTEIN) ?
+		     $sample_file_pep : $sample_file_dna); 
+    print $log_fh "Determining the full-length sequences that correspond to the final set of reads.\n";
     print $log_fh "Each read id converted to include the id for the corresponding full-length sequence.\n";
     print $log_fh ''.$final_num_reads. " reads written to ". File::Spec->abs2rel($filtered_sim_reads_file).".\n";
     if (-e $sample_final_src_seqs) {
 	print $log_fh ''.$final_num_src_seqs.
 	    " full-length sequences corresponding to these reads written to file ". $sample_final_src_seqs."\n";
     }
+    exit(0);
 } 
 
 ####### FORMAT BLAST DATABASE (IF NECESSARY)
