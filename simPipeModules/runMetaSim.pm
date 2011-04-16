@@ -457,7 +457,7 @@ sub create_profile (@) {
    reads; if arg 5 is specified, then the full sequences corresponding
    to those reads which have been filtered are written to a separate
    output file;
- arg 6: (optional) the name of the output file for use with arg 5.
+ arg 6: (optional) the basename of the output file for use with arg 5.
 
 =cut
 
@@ -495,7 +495,11 @@ sub filter_reads ($$;$$$$) {
     my $num_found=0;
     if ($N>0) {
 	# pick random subset of size $N of the reads
-	@chosen_frag_hdrs = get_random_subset($N, \@frag_hdrs);
+	if ($N <= scalar(@frag_hdrs)) {
+	    @chosen_frag_hdrs = get_random_subset($N, \@frag_hdrs);
+	} else {
+	    die "In filter_reads: Cannot choose a subset of $N reads, as there are only ".scalar(@frag_hdrs)." reads!";
+	}
     } elsif ($N < 0) {
 	# pick one read uniformly at random from each set of reads that come from the same source sequence
 	@src_hdrs = get_sequence_headers($seqfile_hdrs);
@@ -581,17 +585,17 @@ sub filter_reads ($$;$$$$) {
     close(OUT);
     close(INFRAG);
     
-    if ( (! $seq_outfile) and $seqfile ) {
+    if ( defined( $seqfile )) {
 	if ($seqfile =~ /$pattern/) {	    
 	    $ext = $pep_fasta_ext;
 	} else {
 	    $ext = $metasim_fasta_ext;
-	}	
-	$seq_outfile = get_basename($seqfile, @exts).$final_src_seqs_name.scalar(@chosen_src_gene_ids).$ext;
-    }
-    if ($outdir and $seq_outfile) {
-	$seq_outfile = File::Spec->catfile($outdir, $seq_outfile);	
-    }    
+	}
+	$seq_outfile = (defined($seq_outfile) ? $seq_outfile : 
+			(defined ($outdir) ? get_basename(File::Spec->catfile($outdir, $seqfile), @exts) : 
+			 get_basename($seqfile, @exts))).
+			 $final_src_seqs_name.scalar(@chosen_src_gene_ids).$ext;
+    }        
     my $num_src_seqs=0;
     if ($seqfile and (-e $seqfile)) {
 	open (OUTSEQ, ">$seq_outfile");

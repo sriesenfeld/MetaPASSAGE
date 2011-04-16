@@ -136,13 +136,15 @@ Options:
     -v, --refdb_basename 
        <optional base name (without extensions, but it should include
         the path) of reference database files, which should already
-        exist; if type is 'protein', peptide sequence file with
-        extension '.pep' must exist; if type is 'RNA2DNA', DNA
-        sequence file with extension '.fna' must exist; (these default
-        extensions are in the module simPipeVars.pm); if no file is
-        found with the given base name, then the reads are aligned
-        without the reference sequences; used with option '-a', and
-        also with option '-m', '-d', and '--align_withali'>
+        exist; the reference database is used in sampling sequencing
+        (see option '-m'), the blast step (see option '-d') and for
+        alignment (see, e.g., option '-a'); if type is 'protein',
+        peptide sequence file with extension '.pep' must exist; if
+        type is 'RNA2DNA', DNA sequence file with extension '.fna'
+        must exist; (these default extensions are in the module
+        simPipeVars.pm); if no file is found with the given base name,
+        then the reads are aligned without the reference sequences;
+        used with options '-m', '-d', '-a', and '--align_withali'>
 
     -n, --num_seqs 
        <total number of distinct sequences to be sampled for the
@@ -781,7 +783,8 @@ if ( (defined ($sample_file_dna) and $add_seqs_flag) or ($num_seqs and $sim_flag
 if ( !(defined($metasim_profile)) and ($num_seqs or defined($src_seqs_dna) ) 
      and $sim_flag ) {
     # create taxonomic profile
-    $metasim_profile = create_profile('-i', $src_seqs_dna, '-o', $out_dir, '-k', $tax_profile_ratio, 
+    $metasim_profile = File::Spec->catfile($out_dir, get_basename($src_seqs_dna).$metasim_profile_ext);
+    $metasim_profile = create_profile('-i', $src_seqs_dna, '-o', $metasim_profile, '-k', $tax_profile_ratio, 
 				      '-a', $tax_profile_max_abundance);
     if (! (-e $metasim_profile)) {
 	die "Error creating taxonomic MetaSim profile $metasim_profile.\n";
@@ -803,11 +806,8 @@ if ($sim_flag) {
     }
     $metasim_profile = abs_path($metasim_profile);
     print $log_fh "Running MetaSim to create $num_reads reads.\n";
-    $metasim_reads_file = get_basename($metasim_profile, $metasim_profile_ext);
-    if ($metasim_reads_file =~ /(.*)-$src_filename_default$/) {
-	$metasim_reads_file = $1;
-    }    
-    $metasim_reads_file = $metasim_reads_file.$metasim_filename_default.$dna_fasta_ext;
+    # $metasim_reads_file = get_basename($metasim_profile, $metasim_profile_ext);
+    $metasim_reads_file = get_basename($src_seqs_dna).$metasim_filename_default.$dna_fasta_ext;
     @args = ('-m',  $metasim_profile, '-r', $num_reads, '-f', $metasim_log, 
 	     '-o', $metasim_reads_file);
     if (defined ($metasim_error_conf_file)) {
@@ -887,13 +887,14 @@ if ((!$align_flag) and (!$blast_flag) and ($num_seqs or defined($sample_file_dna
     ($filtered_sim_reads_file, $sample_final_src_seqs, $final_num_reads, $final_num_src_seqs) =
 	filter_reads($reads_to_filter, $num_filtered_reads, $sample_file_dna, $out_dir, 
 		     ($type eq PROTEIN) ?
-		     $sample_file_pep : $sample_file_dna); 
+		     $sample_file_pep : $sample_file_dna, $sample_file_basename); 
     print $log_fh "Determining the full-length sequences that correspond to the final set of reads.\n";
     print $log_fh "Each read id converted to include the id for the corresponding full-length sequence.\n";
     print $log_fh ''.$final_num_reads. " reads written to ". File::Spec->abs2rel($filtered_sim_reads_file).".\n";
     if (-e $sample_final_src_seqs) {
 	print $log_fh ''.$final_num_src_seqs.
-	    " full-length sequences corresponding to these reads written to file ". $sample_final_src_seqs."\n";
+	    " full-length sequences corresponding to these reads written to file ".
+	    File::Spec->abs2rel($sample_final_src_seqs).".\n";
     }
     exit(0);
 } 
@@ -1007,17 +1008,18 @@ if ( $num_seqs or defined($sample_file_dna) ) {
     }
     unless (-e $reads_to_align) {
 	die "Cannot find file $reads_to_align containing reads to be filtered.\n";
-    }
+    }    
     ($filtered_sim_reads_file, $sample_final_src_seqs, $final_num_reads, $final_num_src_seqs) =
 	filter_reads($reads_to_align, $num_filtered_reads, $sample_file_dna, $out_dir, 
-		     ($type eq PROTEIN) ? $sample_file_pep : $sample_file_dna ); 
-    print $log_fh "Determining the full-length sequences that correspond to the final set of reads\n";
+		     ($type eq PROTEIN) ? $sample_file_pep : $sample_file_dna, $sample_file_basename ); 
+    print $log_fh "Determining the full-length sequences that correspond to the final set of reads.\n";
     print $log_fh "Each read id converted to include the id for the corresponding full-length sequence.\n";
     print $log_fh ''.$final_num_reads. " reads written to ". File::Spec->abs2rel($filtered_sim_reads_file).".\n";
     $reads_to_align = $filtered_sim_reads_file;
     if (-e $sample_final_src_seqs) {
 	print $log_fh ''.$final_num_src_seqs.
-	    " full-length sequences corresponding to these reads written to file ". File::Spec->abs2rel($sample_final_src_seqs)."\n";
+	    " full-length sequences corresponding to these reads written to file ". 
+	    File::Spec->abs2rel($sample_final_src_seqs).".\n";
     }
 } 
 
