@@ -133,6 +133,17 @@ MetaSim
 NCBI BLAST (legacy version, blastall with blastx, blastp, formatdb) 
   ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/
 
+NOTE: The directories containing MetaSim and any other programs listed
+below must be included in your PATH environment variable so that the
+programs can be called by MetaPASSAGE. To take care of this, if you
+are running bash, for example, you can add a line like the following
+to your .bashrc file:
+
+export PATH=$PATH:/home/packages/metasim/
+
+where "/home/packages/metasim/" above should be replaced by the
+correct directory containing the metasim software package. 
+
 To use files of protein sequences as well -- in particular, to be able
 to translate DNA reads into peptides -- you need to also install
 EMBOSS, or at least the 'transeq' program in EMBOSS:
@@ -200,15 +211,30 @@ Bio::DB
 Bio::Factory
 Bio::SeqFeature
 
+==TROUBLESHOOTING==
+
+The most likely cause of an error is a problem with MetaSim. These
+problems can be difficult to debug because MetaSim does not output
+clear error messages.
+
+Two simple things to check first:
+
+1. Is the directory containing MetaSim in your PATH environment
+variable? You can check by running "which MetaSim" at the command
+prompt. The system should print the directory location of the MetaSim
+executable.
+
+2. MetaSim does not like it when there are multiple sequences with the
+same identifier in the full-length sequence file. It is better to use
+different identifiers.
 
 ==CUSTOMIZING METAPASSAGE==
 
 There are many options for MetaPASSAGE.pl that can be used to
 customize the functionality. (See MetaPASSAGE.pl or run it with option
-'--help' at the prompt, once it is installed.) Alternatively,
+'--help' at the prompt, once it is installed.) Alternatively, many
 variables that you may want to customize are in the Perl module
 SimPipeVars.pm.
-
 
 ==OUTPUT FILES==
 
